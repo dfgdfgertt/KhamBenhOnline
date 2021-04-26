@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var KhoaSchema = mongoose.Schema({
     name: {
         type: String,
@@ -14,6 +13,5 @@ var KhoaSchema = mongoose.Schema({
 },{
     collection: 'khoa'
 });
-
 
 module.exports = mongoose.model('Khoa', KhoaSchema);

@@ -16,7 +16,7 @@ router.route('/create').post(function (req, res) {
 });
 
 // Defined get data(index or listing) route
-router.route('/getAll').get(function (req, res) {
+router.route('/get').get(function (req, res) {
     Khoa.find(function(err, khoas){
         if(err){
             console.log(err);
