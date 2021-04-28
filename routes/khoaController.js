@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Khoa = require('./../database/khoa');
+const Khoa = require('./../database/table/khoa');
 
 
 // Defined store route

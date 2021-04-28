@@ -6,8 +6,10 @@ const bodyParser = require('body-parser');
 const PORT = 9000;
 const cors = require('cors');
 
-const khoaRoute = require('./controller/khoaController');
- 
+const khoaRoute = require('./routes/khoaController');
+const RoleRoute = require('./routes/roleController');
+const AccountRoute = require('./routes/accoutController');
+
 app.use(express.static("public"));
  
 app.set("view engine", "ejs");
@@ -19,6 +21,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use('/khoa', khoaRoute);
+app.use('/api/role', RoleRoute);
+app.use('/api/account', AccountRoute);
+
 
 app.listen(PORT, function() {
     console.log('Starting at Port:',PORT);
