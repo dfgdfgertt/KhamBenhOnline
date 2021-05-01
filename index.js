@@ -12,6 +12,7 @@ const AccountRoute = require('./routes/accoutRoute');
 const UserRoute = require('./routes/userRoute');
 const MemberRoute = require('./routes/memberRoute');
 const DoctorRoute = require('./routes/doctorRoute');
+const LoginRoute = require('./routes/loginRoute');
 
 app.use(express.static("public"));
  
@@ -29,6 +30,7 @@ app.use('/api/account', AccountRoute);
 app.use('/api/user', UserRoute);
 app.use('/api/member', MemberRoute);
 app.use('/api/doctor', DoctorRoute);
+app.use('/api/login', LoginRoute);
 
 app.listen(PORT, function() {
     console.log('Starting at Port:',PORT);

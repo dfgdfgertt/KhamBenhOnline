@@ -1,20 +1,28 @@
 const express = require('express');
+const user = require('../database/table/user');
 const Account = require('./../database/table/account');
 const Role = require('./../database/table/role');
 
-const create = function (req, res) {
-    if (!req.body.username ){ 
-        res.status(400).send("User name is require");
+const create = async function (req, res) {
+    if (!req.body.username){ 
+        res.status(400).send("Username is require");
         return;
     }else if (!req.body.password){
         res.status(400).send("Password is require");
         return;
     }
-    let role = Role.findById(req.body.idRole);
-    if (!role){
-        res.status(400).send("Role not found");
-        return;
-    }
+    await Account.findOne({username: req.body.username}, async function(err, account) {
+        if (err) {
+              console.loh(err);
+        }
+        else{
+            if (account){
+                res.status(400).send("Username already exists");
+                return;
+            }
+        }
+        }
+    );
     let account = new Account(req.body);
     account.save()
         .then(account => {
@@ -35,7 +43,7 @@ const getAll = function (req, res) {
         else {
             res.status(200).json(accounts);
         }
-    });
+    }).populate('idRole');
 }
 
 const getOneById = function (req, res) {
@@ -48,7 +56,7 @@ const getOneById = function (req, res) {
         else {
             res.status(200).json(account);
         }
-    });
+    }).populate('idRole');
 }
 
 const updateById = function (req, res) {
