@@ -29,4 +29,4 @@ var DoctorSchema = mongoose.Schema({
     collection: 'doctor'
 });
 
-module.exports = mongoose.model('Doctor', DoctorSchema);
+module.exports = mongoose.model('doctor', DoctorSchema);

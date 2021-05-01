@@ -5,10 +5,11 @@ var MemberSchema = mongoose.Schema({
         ref: 'user'
     },
     listDiagnostic:[{
-        type: String
+        type: String,
+        default: null
     }]
 },{
     collection: 'member'
 });
 
-module.exports = mongoose.model('Member', MemberSchema);
+module.exports = mongoose.model('member', MemberSchema);

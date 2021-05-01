@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var UserSchema = mongoose.Schema({
-    name: {
+    fullname: {
         type: String,
         default: 'No Name'
     },
@@ -18,14 +18,16 @@ var UserSchema = mongoose.Schema({
     },
     idRole:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'role'
+        ref: 'role',
+        default: null
     },
     idAccount:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'account'
+        ref: 'account',
+        default: null
     }
 },{
     collection: 'user'
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('user', UserSchema);

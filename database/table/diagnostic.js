@@ -17,4 +17,4 @@ var DiagnosticScheme = mongoose.Schema({
     collection: 'diagnostic'
 });
 
-module.exports = mongoose.model('Diagnostic', DiagnosticScheme);
+module.exports = mongoose.model('diagnostic', DiagnosticScheme);

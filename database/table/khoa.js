@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var KhoaSchema = mongoose.Schema({
+var FacultySchema = mongoose.Schema({
     name: {
         type: String,
         default: 'No Name'
@@ -11,7 +11,7 @@ var KhoaSchema = mongoose.Schema({
         type: String
     }
 },{
-    collection: 'khoa'
+    collection: 'faculty'
 });
 
-module.exports = mongoose.model('Khoa', KhoaSchema);
+module.exports = mongoose.model('faculty', FacultySchema);

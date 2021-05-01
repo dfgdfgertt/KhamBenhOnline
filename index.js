@@ -6,9 +6,11 @@ const bodyParser = require('body-parser');
 const PORT = 9000;
 const cors = require('cors');
 
-const khoaRoute = require('./routes/khoaController');
-const RoleRoute = require('./routes/roleController');
-const AccountRoute = require('./routes/accoutController');
+const FacultyRoute = require('./routes/facultyRoute');
+const RoleRoute = require('./routes/roleRoute');
+const AccountRoute = require('./routes/accoutRoute');
+const UserRoute = require('./routes/userRoute');
+const MemberRoute = require('./routes/memberRoute');
 
 app.use(express.static("public"));
  
@@ -20,9 +22,11 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use('/khoa', khoaRoute);
+app.use('/api/faculty', FacultyRoute);
 app.use('/api/role', RoleRoute);
 app.use('/api/account', AccountRoute);
+app.use('/api/user', UserRoute);
+app.use('/api/member', MemberRoute);
 
 
 app.listen(PORT, function() {
