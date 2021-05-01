@@ -1,7 +1,6 @@
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const { randomInt } = require('crypto');
-const Khoa = require('./../database/table/khoa');
 const { config } = require('process');
 //const express = require('express');
 //const router = express.Router();

@@ -11,6 +11,7 @@ const RoleRoute = require('./routes/roleRoute');
 const AccountRoute = require('./routes/accoutRoute');
 const UserRoute = require('./routes/userRoute');
 const MemberRoute = require('./routes/memberRoute');
+const DoctorRoute = require('./routes/doctorRoute');
 
 app.use(express.static("public"));
  
@@ -27,7 +28,7 @@ app.use('/api/role', RoleRoute);
 app.use('/api/account', AccountRoute);
 app.use('/api/user', UserRoute);
 app.use('/api/member', MemberRoute);
-
+app.use('/api/doctor', DoctorRoute);
 
 app.listen(PORT, function() {
     console.log('Starting at Port:',PORT);

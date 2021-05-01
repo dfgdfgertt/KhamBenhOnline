@@ -4,6 +4,9 @@ var DoctorSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
+    nickname:{
+        type: String
+    },
     image:{
         type: String
     },
@@ -20,11 +23,18 @@ var DoctorSchema = mongoose.Schema({
         type: String
     },
     workingProcess: [{
-        type: String
+        type: String,
+        default: null
     }],
     listDiagnostic:[{
-        type: String
-    }]
+        type: String,
+        default: null
+    }],
+    idFaculty:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'faculty',
+        default: null
+    },
 },{
     collection: 'doctor'
 });

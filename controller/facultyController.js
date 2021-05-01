@@ -1,5 +1,5 @@
 const express = require('express');
-const Khoa = require('./../database/table/khoa');
+const Khoa = require('./../database/table/faculty');
 const UploadImage = require('./upload');
 
 const create = async function (req, res) {
