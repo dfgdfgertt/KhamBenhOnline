@@ -22,10 +22,10 @@ const create = async function (req, res) {
         }
     }
     let user = new User(req.body);
-    if(req.body.avatar != null){
-        let image = await UploadImage.uploadFile(req.body.avatar);
-        user.avatar = image.Location;
-    }
+    // if(req.body.avatar){
+    //     let image = await UploadImage.uploadFile(req.body.avatar);
+    //     user.avatar = image.Location;
+    // }
     user.save()
         .then(user => {
             res.status(200).json({"message":'create successfully'});
@@ -86,10 +86,11 @@ const updateById = function (req, res) {
                     return;
                 }
             }
-            if(req.body.avatar != null){
-                let image = await UploadImage.uploadFile(req.body.avatar);
-                user.avatar = image.Location;
-            }
+            // if(req.body.avatar != null){
+            //     let image = await UploadImage.uploadFile(req.body.avatar);
+            //     user.avatar = image.Location;
+            // }
+            user.avatar = req.body.avatar;
             user.fullname = req.body.fullname;
             user.address = req.body.address;
             user.phoneNumber = req.body.phoneNumber;

@@ -14,18 +14,18 @@ const create = async function (req, res) {
         return;
     }
     const user = new User(req.body);
-    if(req.body.avatar != null){
-        let image = await UploadImage.uploadFile(req.body.avatar);
-        user.avatar = image.Location;
-    }
+    // if(req.body.avatar != null){
+    //     let image = await UploadImage.uploadFile(req.body.avatar);
+    //     user.avatar = image.Location;
+    // }
     user.save()
         .then(async user => {
             const doctor = new Doctor(req.body);
             doctor.idUser = user._id;
-            if(req.body.image != null){
-                let image = await UploadImage.uploadFile(req.body.image);
-                doctor.image = image.Location;
-            }
+            // if(req.body.image != null){
+            //     let image = await UploadImage.uploadFile(req.body.image);
+            //     doctor.image = image.Location;
+            // }
             doctor.save().then(doctor =>{
                 res.status(200).json({"message":"Create successfully"});
             })
@@ -141,10 +141,11 @@ const updateById = function (req, res) {
                     res.status(400).send({"message":"user full name is require"});
                     return;
                 }
-                if(req.body.avatar != null){
-                    let image = await UploadImage.uploadFile(req.body.avatar);
-                    user.avatar = image.Location;
-                }
+                // if(req.body.avatar != null){
+                //     let image = await UploadImage.uploadFile(req.body.avatar);
+                //     user.avatar = image.Location;
+                // }
+                user.avatar = req.body.avatar;
                 user.fullname = req.body.fullname;
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
@@ -152,10 +153,11 @@ const updateById = function (req, res) {
                 user.idAccount = req.body.idAccount;
                 user.idRole = req.body.idRole;
                 user.save().then(async user => {
-                    if(req.body.image != null){
-                        let image2 = await UploadImage.uploadFile(req.body.image);
-                        doctor.image = image2.Location;
-                    }
+                    // if(req.body.image != null){
+                    //     let image2 = await UploadImage.uploadFile(req.body.image);
+                    //     doctor.image = image2.Location;
+                    // }
+                    doctor.image = req.body.image;
                     doctor.nickname = req.body.nickname;
                     doctor.trainingPlaces = req.body.trainingPlaces;
                     doctor.degree = req.body.degree;

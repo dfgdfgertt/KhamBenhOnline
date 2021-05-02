@@ -14,10 +14,10 @@ const create = async function (req, res) {
         return;
     }
     let user = new User(req.body);
-    if(req.body.avatar != null){
-        let image = await UploadImage.uploadFile(req.body.avatar);
-        user.avatar = image.Location;
-    }
+    // if(req.body.avatar != null){
+    //     let image = await UploadImage.uploadFile(req.body.avatar);
+    //     user.avatar = image.Location;
+    // }
     user.save()
         .then(user => {
             const member = new Member();
@@ -111,13 +111,14 @@ const updateById = function (req, res) {
                     res.status(400).send({"message":"user full name is require"});
                     return;
                 }
-                if(req.body.avatar != null){
-                    let image = await UploadImage.uploadFile(req.body.avatar);
-                    user.avatar = image.Location;
-                }
+                // if(req.body.avatar != null){
+                //     let image = await UploadImage.uploadFile(req.body.avatar);
+                //     user.avatar = image.Location;
+                // }
                 user.fullname = req.body.fullname;
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
+                user.avatar = req.body.avatar
                 user.mail = req.body.mail;
                 user.idAccount = req.body.idAccount;
                 user.idRole = req.body.idRole;

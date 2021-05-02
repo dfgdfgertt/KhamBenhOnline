@@ -36,7 +36,6 @@ const uploadFile = async (fileName) => {
             throw err;
         }
         console.log(`File uploaded successfully. ${data.Location}`);
-        link = data.Location;
     }).promise();
    
 };

@@ -3,19 +3,20 @@ const Khoa = require('./../database/table/faculty');
 const UploadImage = require('./upload');
 
 const create = async function (req, res) {
-    let khoa = new Khoa();
     if (!req.body.name){ 
         res.status(400).send({"message":"Faculty name is require"});
         return;
     }
-    if(req.body.logo != null){
-        let image = await UploadImage.uploadFile(req.body.logo);
-        khoa.logo = image.Location;
-    }
-    khoa.name = req.body.name;
-    khoa.description = req.body.description;
+    let khoa = new Khoa(req.body);
+    // if(req.body.logo != null){
+    //     let image = await UploadImage.uploadFile(req.body.logo);
+    //     khoa.logo = image.Location;
+    // }
+    //khoa.name = req.body.name;
+    //khoa.description = req.body.description;
     await khoa.save()
         .then(khoa => {
+            console.log(khoa);
             res.status(200).json({"message": "faculty create successfully"});
         })
         .catch(err => {
@@ -62,11 +63,12 @@ const updateById = function (req, res) {
                 res.status(400).send({"message":"unable to save to database"});
                 return;
             }
-            if(req.body.logo != null){
-                let image = await UploadImage.uploadFile(req.body.logo);
-                khoa.logo = image.Location;
-                //khoa.logo = updateOne(req.body.logo);
-            }
+            // if(req.body.logo != null){
+            //     let image = await UploadImage.uploadFile(req.body.logo);
+            //     khoa.logo = image.Location;
+            //     //khoa.logo = updateOne(req.body.logo);
+            // }
+            khoa.logo = req.body.logo;
             khoa.name = req.body.name;
             khoa.description = req.body.description;
             khoa.save().then(business => {
