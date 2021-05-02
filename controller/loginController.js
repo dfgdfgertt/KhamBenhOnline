@@ -39,12 +39,12 @@ const doctorlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send("Login is unsuccessfully");
+            res.status(400).send({"message":"Login is unsuccessfully"});
         }else{
             Doctor.findOne({idUser:user._id },function(err, doctor){
                 if (err) {
                     console.log(err);
-                    res.status(400).send("Login is unsuccessfully");
+                    res.status(400).send({"message":"Login is unsuccessfully"});
                 }else {
                     newjson = [
                         {
@@ -78,12 +78,12 @@ const memberlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send("Login is unsuccessfully");
+            res.status(400).send({"message":"Login is unsuccessfully"});
         }else{
         Member.findOne({idUser:user._id} , function(err, member){
             if (err) {
                 console.log(err);
-                res.status(400).send("Login is unsuccessfully");
+                res.status(400).send({"message":"Login is unsuccessfully"});
             }else{
                 json =
                 {
@@ -110,11 +110,11 @@ const login = async function (req, res){
         }
         else{
             if (!account){
-                res.status(400).send("The account is not registered");
+                res.status(400).send({"message":"The account is not registered"});
                 return;
             }else{
                 if (account.password != req.body.password) {
-                    res.status(400).send("Password is not correct");
+                    res.status(400).send({"message":"Password is not correct"});
                 return;
                 }else{
                     switch (account.idRole.name) {
@@ -127,7 +127,7 @@ const login = async function (req, res){
                             memberlogin(account._id, res);
                             break;
                         default:
-                            res.status(400).send("Login is unsuccessfully");
+                            res.status(400).send({"message":"Login is unsuccessfully"});
                             break;
                     }
                 }
@@ -139,27 +139,27 @@ const login = async function (req, res){
 
 const changePassword = function(req, res){
     if (!req.body.password){
-        res.status(400).send("Please! input password");
+        res.status(400).send({"message":"Please! input password"});
         return;
     }else if (!req.body.newpassword){
-        res.status(400).send("Please! input new password");
+        res.status(400).send({"message":"Please! input new password"});
         return;
     }
     Account.findOne({_id: req.params.id},  async function(err, account){
         if (err) {
-            res.status(400).send("Account not found");
+            res.status(400).send({"message":"Account not found"});
             console.log(err);
             return;
         } else {
             if (account.password != req.body.password) {
-                res.status(400).send("Password incorrect");
+                res.status(400).send({"message":"Password incorrect"});
             } else {
                 account.password = req.body.newpassword;
                 account.save().then(acc =>{
-                    res.status(400).send("Change password is successfully");
+                    res.status(400).send({"message":"Change password is successfully"});
                     return;
                 }).catch(err => {
-                    res.status(400).send("unable to Change password");
+                    res.status(400).send({"message":"unable to Change password"});
                     console.log(err);
                 });
             }
@@ -174,21 +174,21 @@ const forgotpassword = async function (req, res){
         }
         else{
             if (!account){
-                res.status(400).send("The account is not registered");
+                res.status(400).send({"message":"The account is not registered"});
                 return;
             }else{
                 if (!req.body.forgot){
-                    res.status(400).send("Please! input email or phoneNumber");
+                    res.status(400).send({"message":"Please! input email or phoneNumber"});
                     return;
                 }
                 await User.findOne({idAccount:account._id}, function(err, user){
                     if (err) {
                         console.log(err);
-                        res.status(400).send("fail to forgot");
+                        res.status(400).send({"message":"fail to forgot"});
                         return;
                     } else {
                         if (!user){
-                            res.status(400).send("The user not found");
+                            res.status(400).send({"message":"The user not found"});
                             return;
                         }else{
                             newjson= [{

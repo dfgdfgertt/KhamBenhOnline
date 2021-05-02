@@ -10,7 +10,7 @@ function delay(time) {
 
 const create = async function (req, res) {
     if (!req.body.fullname ){ 
-        res.status(400).send("Full name is require");
+        res.status(400).send({"message":"Full name is require"});
         return;
     }
     let user = new User(req.body);
@@ -23,15 +23,15 @@ const create = async function (req, res) {
             const member = new Member();
             member.idUser = user._id;
             member.save().then(member =>{
-                res.status(200).json('Create successfully');
+                res.status(200).json({"message":"Create successfully"});
             })
             .catch(err => {
-                res.status(400).send("unable to save to database");
+                res.status(400).send({"message":"unable to save to database"});
                 console.log(err);
             })
         })
         .catch(err => {
-            res.status(400).send("unable to save to database");
+            res.status(400).send({"message":"unable to save to database"});
             console.log(err);
         });
 }
@@ -41,7 +41,7 @@ const getOneById = function (req, res) {
     let id = req.params.id;
     Member.findById(id, async function (err, member){
         if (!member){
-            res.status(404).send("data is not found");
+            res.status(404).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -70,7 +70,7 @@ const getAll = function (req, res) {
     Member.find( async function(err, members){
         
         if(err){
-            res.status(400).send("fail to get");
+            res.status(400).send({"message":"fail to get"});
             console.log(err);
         }
         else { 
@@ -102,13 +102,13 @@ const getAll = function (req, res) {
 const updateById = function (req, res) {
     Member.findById(req.params.id,async function(err, member) {
         if (!member){
-            res.status(404).send("Data is not found");
+            res.status(404).send({"message":"Data is not found"});
             console.log(err);
         }
         else {
             User.findById(member.idUser , async function(err, user) {
                 if (!req.body.fullname ){ 
-                    res.status(400).send("user full name is require");
+                    res.status(400).send({"message":"user full name is require"});
                     return;
                 }
                 if(req.body.avatar != null){
@@ -125,7 +125,7 @@ const updateById = function (req, res) {
                     res.status(200).json('Update complete');
                 })
                     .catch(err => {
-                        res.status(400).send("unable to update the database");
+                        res.status(400).send({"message":"unable to update the database"});
                         console.log(err);
                     });
             });
@@ -136,20 +136,20 @@ const updateById = function (req, res) {
 const deleteById = function (req, res) {
     Member.findById({_id: req.params.id}, function(err, member){
         if(err){
-            res.status(404).send("Data is not found");
+            res.status(404).send({"message":"Data is not found"});
             console.log(err);
         }
         else{
             User.findById({_id: member.idUser}, function(err, user){
                 if(err){
-                    res.status(404).send("Data is not found");
+                    res.status(404).send({"message":"Data is not found"});
                     console.log(err);
                 }
                 else{
                     user.remove();
                 }});
             member.remove();
-            res.status(200).json('Successfully removed');
+            res.status(200).json({"message":"Successfully removed"});
         }
     });
 }

@@ -6,18 +6,18 @@ const UploadImage = require('./upload');
 
 const create = async function (req, res) {
     if (!req.body.fullname ){ 
-        res.status(400).send("Full name is require");
+        res.status(400).send({"message":"Full name is require"});
         return;
     }else if (!req.body.idRole != null){
        let role = Role.findById(req.body.idRole);
        if(!role){
-        res.status(400).send("Role not found");
+        res.status(400).send({"message":"Role not found"});
         return;
        }
     }else if (!req.body.idAccount != null){
         let account = Account.findById(req.body.idAccount)
         if (!account){
-            res.status(400).send("Account not found");
+            res.status(400).send({"message":"Account not found"});
             return;
         }
     }
@@ -28,11 +28,11 @@ const create = async function (req, res) {
     }
     user.save()
         .then(user => {
-            res.status(200).json({'user': 'create successfully'});
+            res.status(200).json({"message":'create successfully'});
             return user.id;
         })
         .catch(err => {
-            res.status(400).send("unable to save to database");
+            res.status(400).send({"message":"unable to save to database"});
             console.log(err);
         });
 }
@@ -40,7 +40,7 @@ const create = async function (req, res) {
 const getAll = function (req, res) {
     User.find(function(err, users){
         if(err){
-            res.status(400).send("fail to get");
+            res.status(400).send({"message":"fail to get"});
             console.log(err);
         }
         else {
@@ -54,7 +54,7 @@ const getOneById = function (req, res) {
     let id = req.params.id;
     User.findById(id, function (err, user){
         if (!user){
-            res.status(404).send("data is not found");
+            res.status(404).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -66,23 +66,23 @@ const getOneById = function (req, res) {
 const updateById = function (req, res) {
     User.findById(req.params.id, async function(err, user) {
         if (!user){
-            res.status(404).send("Data is not found");
+            res.status(404).send({"message":"Data is not found"});
             console.log(err);
         }
         else {
             if (!req.body.fullname ){ 
-                res.status(400).send("user full name is require");
+                res.status(400).send({"message":"user full name is require"});
                 return;
             }else if (!req.body.idRole != null){
                let role = Role.findById(req.body.idRole);
                if(!role){
-                res.status(400).send("Role not found");
+                res.status(400).send({"message":"Role not found"});
                 return;
                }
             }else if (!req.body.idAccount != null){
                 let account = Account.findById(req.body.idAccount)
                 if (!account){
-                    res.status(400).send("Account not found");
+                    res.status(400).send({"message":"Account not found"});
                     return;
                 }
             }
@@ -97,10 +97,10 @@ const updateById = function (req, res) {
             user.idAccount = req.body.idAccount;
             user.idRole = req.body.idRole;
             user.save().then(user => {
-                res.status(200).json('Update complete');
+                res.status(200).json({"message":"Update complete"});
             })
                 .catch(err => {
-                    res.status(400).send("unable to update the database");
+                    res.status(400).send({"message":"unable to update the database"});
                     console.log(err);
                 });
         }
@@ -110,11 +110,11 @@ const updateById = function (req, res) {
 const deleteById = function (req, res) {
     User.findByIdAndRemove({_id: req.params.id}, function(err, user){
         if(err){
-            res.status(404).send("Data is not found");
+            res.status(404).send({"message":"Data is not found"});
             console.log(err);
         }
         else{
-            res.status(200).json('Successfully removed');
+            res.status(200).json({"message":"Successfully removed"});
         }
     });
 }

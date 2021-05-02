@@ -5,7 +5,7 @@ const UploadImage = require('./upload');
 const create = async function (req, res) {
     let khoa = new Khoa();
     if (!req.body.name){ 
-        res.status(400).send("Faculty name is require");
+        res.status(400).send({"message":"Faculty name is require"});
         return;
     }
     if(req.body.logo != null){
@@ -16,10 +16,10 @@ const create = async function (req, res) {
     khoa.description = req.body.description;
     await khoa.save()
         .then(khoa => {
-            res.status(200).json({'faculty': 'faculty in create successfully'});
+            res.status(200).json({"message": "faculty create successfully"});
         })
         .catch(err => {
-            res.status(400).send("unable to save to database");
+            res.status(400).send({"message":"unable to save to database"});
             console.log(err)
         });
 }
@@ -27,7 +27,7 @@ const create = async function (req, res) {
 const get = function (req, res){
     Khoa.find(function(err, khoas){
         if(err){
-            res.status(404).send("data is not found");
+            res.status(404).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -40,7 +40,7 @@ const getOnebyId = function (req, res) {
     let id = req.params.id;
     Khoa.findById(id, function (err, khoa){
         if (!khoa){
-            res.status(404).send("data is not found");
+            res.status(404).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -54,12 +54,12 @@ const getOnebyId = function (req, res) {
 const updateById = function (req, res) {
     Khoa.findById(req.params.id, async function(err, khoa) {
         if (!khoa){
-            res.status(404).send("data is not found");
+            res.status(404).send({"message":"data is not found"});
             console.log(err);
         }
         else {
             if (!req.body.name){ 
-                res.status(400).send("unable to save to database");
+                res.status(400).send({"message":"unable to save to database"});
                 return;
             }
             if(req.body.logo != null){
@@ -70,10 +70,10 @@ const updateById = function (req, res) {
             khoa.name = req.body.name;
             khoa.description = req.body.description;
             khoa.save().then(business => {
-                res.status(200).json('Update complete');
+                res.status(200).json({"message":"Update complete"});
             })
                 .catch(err => {
-                    res.status(400).send("unable to update the database");
+                    res.status(400).send({"message":"unable to update the database"});
                     console.log(err);
                 });
         }
@@ -83,10 +83,10 @@ const updateById = function (req, res) {
 const deleteById = function (req, res) {
     Khoa.findByIdAndRemove({_id: req.params.id}, function(err, person){
         if(err){
-            res.status(400).json("Data is not found");
+            res.status(400).json({"message":"Data is not found"});
             console.log(err);
         } 
-        else res.status(200).json('Successfully removed');
+        else res.status(200).json({"message":"Successfully removed"});
     });
 }
 
