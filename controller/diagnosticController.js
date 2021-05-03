@@ -3,6 +3,7 @@ const Growth = require('./../fp-growth/examples/example');
 const Diagnostic = require('./../database/table/diagnostic');
 const Symptom = require('./../database/table/symptom');
 const Faculty = require('./../database/table/faculty');
+const {Classifier} = require('ml-classify-text');
 
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -38,7 +39,7 @@ const getAll = function (req, res) {
         } else {
             res.status(200).json(diagnostics);
         }
-    })
+    }).populate('idFaculty');
 }
 
 const getOneById = function (req, res) {
@@ -51,48 +52,78 @@ const getOneById = function (req, res) {
         else {
             res.status(200).json(diagnostic);
         }
-    });
+    }).populate('idFaculty');
 }
 
 const updateById = function (req, res) {
-    KhDiagnosticoa.findById(req.params.id, async function(err, diagnostic) {
+    Diagnostic.findById(req.params.id, async function(err, diagnostic) {
         if (!diagnostic){
             res.status(404).send({"message":"data is not found"});
             console.log(err);
+            return;
         }
         else {
-            Faculty.findById(req.body.idFaculty, (err, faculty)=>{
+            Faculty.findById(req.body.idFaculty,async (err, faculty)=>{
                 if (err) {
                     res.status(404).send({"message":"faculty is not found"});
                     console.log(err);
+                    return;
                 } else {
-                    diagnostic.idFaculty = req.body.idFaculty;
+                    diagnostic.idFaculty = faculty._id ;
+                    diagnostic.name = req.body.name;
+                    diagnostic.description = req.body.description;
+                    diagnostic.save()
+                    .then(business => {
+                        console.log(business);
+                        res.status(200).json({"message":"Update complete"});
+                        return;
+                    }).catch(err => {
+                        res.status(400).send({"message":"unable to update the database"});
+                        console.log(err);
+                        return;
+                    });
                 }
-            });
-            diagnostic.name = req.body.name;
-            diagnostic.description = req.body.description;
-            diagnostic.save().then(business => {
-                res.status(200).json({"message":"Update complete"});
             })
-            .catch(err => {
-                res.status(400).send({"message":"unable to update the database"});
-                console.log(err);
-            });
         }
     });
 }
-
 
 const deleteById = function (req, res) {
     Diagnostic.findByIdAndRemove({_id: req.params.id}, function(err, e){
         if(err){
-            res.status(400).json({"message":"Data is not found"});
+            res.status(404).json({"message":"Data is not found"});
             console.log(err);
+            return;
         } 
         else res.status(200).json({"message":"Successfully removed"});
     });
 }
 
+const searchDiagnostic = function (req, res) {
+    const classifier = new Classifier();
+    Diagnostic.find((err , diagnostics)=>{
+        diagnostics.forEach(diagnostic => {
+            classifier.train(diagnostic.symptom, diagnostic._id.toString());
+        });
+        let predictions = classifier.predict(req.body.symptom);
+        if (predictions.length) {
+            predictions.forEach(prediction => {
+                //console.log(`${prediction.label} (${prediction.confidence})`)
+                Diagnostic.findById(prediction.label, (err , diagnostic)=>{
+                    if (err) {
+                        res.status(400).json({"message":"Data is not found"});
+                        console.log(err);
+                    } else {
+                        res.status(200).json(diagnostic);
+                    }
+                }).populate('idFaculty');
+            })
+        } else {
+            res.status(400).json({"message":"No predictions returned"});
+            console.log(err);
+        }
+    }).populate('idFaculty');
+};
 
 
 module.exports = {
@@ -101,4 +132,5 @@ module.exports = {
     getOneById,
     updateById,
     deleteById,
+    searchDiagnostic
 };

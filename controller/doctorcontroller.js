@@ -128,6 +128,10 @@ const getAll = function (req, res) {
     });
 }
 
+const getByFaculty = function (req, res) {
+    
+}
+
 
 const updateById = function (req, res) {
     Doctor.findById(req.params.id,async function(err, doctor) {
@@ -208,5 +212,6 @@ module.exports = {
     getAll,
     getOneById,
     updateById,
-    deleteById
+    deleteById,
+    getByFaculty
 };
