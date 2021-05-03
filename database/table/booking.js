@@ -21,11 +21,14 @@ var BookingScheme = mongoose.Schema({
     phoneNumber:{
         type: String
     },
-    day:{
+    mail:{
         type: String
     },
+    day:{
+        type: date
+    },
     time:{
-        type: String
+        type: time
     }
 },{
     collection: 'booking'

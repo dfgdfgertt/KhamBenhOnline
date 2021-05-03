@@ -5,7 +5,8 @@ var MemberSchema = mongoose.Schema({
         ref: 'user'
     },
     listDiagnostic:[{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'diagnostic',
         default: null
     }]
 },{

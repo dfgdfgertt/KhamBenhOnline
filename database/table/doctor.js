@@ -26,10 +26,6 @@ var DoctorSchema = mongoose.Schema({
         type: String,
         default: null
     }],
-    listDiagnostic:[{
-        type: String,
-        default: null
-    }],
     idFaculty:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'faculty',

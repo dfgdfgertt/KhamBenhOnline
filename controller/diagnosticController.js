@@ -3,6 +3,7 @@ const Growth = require('./../fp-growth/examples/example');
 const Diagnostic = require('./../database/table/diagnostic');
 const Symptom = require('./../database/table/symptom');
 const Faculty = require('./../database/table/faculty');
+const Member = require('./../database/table/member');
 const {Classifier} = require('ml-classify-text');
 
 function delay(time) {
@@ -101,7 +102,7 @@ const deleteById = function (req, res) {
 
 const searchDiagnostic = function (req, res) {
     const classifier = new Classifier();
-    Diagnostic.find((err , diagnostics)=>{
+    Diagnostic.find(function(err , diagnostics){
         diagnostics.forEach(diagnostic => {
             classifier.train(diagnostic.symptom, diagnostic._id.toString());
         });
@@ -114,12 +115,18 @@ const searchDiagnostic = function (req, res) {
                         res.status(400).json({"message":"Data is not found"});
                         console.log(err);
                     } else {
+                        if (req.body.idMember) {
+                            Member.findById(req.body.idMember, (err, u)=>{
+                                u.listDiagnostic.push(diagnostic._id);
+                                u.save();
+                            })
+                        }
                         res.status(200).json(diagnostic);
                     }
                 }).populate('idFaculty');
             })
         } else {
-            res.status(400).json({"message":"No predictions returned"});
+            res.status(200).json({"message":"Hãy nhập rõ hơn triệu chứng của bạn!"});
             console.log(err);
         }
     }).populate('idFaculty');
