@@ -6,13 +6,13 @@ var DiagnosticScheme = mongoose.Schema({
     description:{
         type: String
     },
-    idKhoa: {
+    idFaculty: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'khoa'
     },
-    symptom:[{
-        type: String
-    }]
+    symptom:{
+        type: Array
+    }
 },{
     collection: 'diagnostic'
 });
