@@ -14,6 +14,9 @@ router.route('/get').get(controller.getAll);
 // Defined get route
 router.route('/get/:id').get(controller.getOneById);
 
+// Get by facultyid
+router.route('/getbyfaculty/:id').get(controller.getByFaculty);
+
 //  Defined update route
 router.route('/update/:id').put(controller.updateById);
 

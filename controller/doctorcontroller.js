@@ -129,7 +129,15 @@ const getAll = function (req, res) {
 }
 
 const getByFaculty = function (req, res) {
-    
+    Doctor.find({idFaculty: req.body.idFaculty}, (err, doctors)=>{
+        if (err) {
+            res.status(400).send({"message":"fail to get"});
+            console.log(err);
+            return;
+        } else {
+            res.status(200).json(doctors);
+        }
+    }).populate('idFaculty')
 }
 
 

@@ -20,6 +20,7 @@ router.route('/update/:id').put(controller.updateById);
 // Defined delete | remove | destroy route
 router.route('/delete/:id').delete(controller.deleteById);
 
+//search diagnostic {"symptom":"value"}
 router.route('/searchdiagnostic').post(controller.searchDiagnostic);
 
 module.exports = router;
