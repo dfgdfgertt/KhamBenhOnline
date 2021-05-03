@@ -37,7 +37,7 @@ fpgrowth.on('data', function (itemset) {
         let diagnostic =  new Diagnostic();
         diagnostic.symptom = items;
         diagnostic.save().then( e =>{
-            console.log(diagnostic);
+            //console.log(diagnostic);
         }).catch(err =>{
             console.log(err);
         });

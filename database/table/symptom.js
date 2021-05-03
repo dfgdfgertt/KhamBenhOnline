@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var SymptomSchema = mongoose.Schema({
     symptom: []
 },{
-    collection: 'account'
+    collection: 'symptom'
 });
 
 module.exports = mongoose.model('symptom', SymptomSchema);

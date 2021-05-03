@@ -21,7 +21,7 @@ const createsymptom = async function (req, res) {
                 symptom.symptom.push(element.symptom);
             });
             symptom.save().then(symp=>{
-                res.status(200).json({"message":"Create successfully"});
+                res.status(200).json({"message":"Execute successfully"});
             }).catch(err =>{
                 res.status(400).send({"message":"unable to save to database"});
                 console.log(err);

@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var DiagnosticScheme = mongoose.Schema({
     name:{
-        type: String
+        type: String,
+        default: 'no name'
     },
     description:{
         type: String
