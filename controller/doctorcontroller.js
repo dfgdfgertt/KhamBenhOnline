@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('./../database/table/user');
 const Doctor = require('./../database/table/doctor');
+const Role = require('./../database/table/role');
 const UploadImage = require('./upload');
 
 
@@ -12,26 +13,21 @@ const create = async function(req, res) {
     if (!req.body.fullname) {
         res.status(400).send({ "message": "Không thể bỏ trống tên!" });
         return;
-    } else if (!req.body.idRole != null) {
-        let role = Role.findById(req.body.idRole);
-        if (!role) {
-            res.status(400).send({ "message": "Chức vụ không tồn tại" });
-            return;
-        }
+    }
+    if (!req.body.idRole != null) {
+        Role.findById(req.body.idRole, (err, role)=>{
+            if (err) {
+                res.status(400).send({ "message": "Chức vụ không tồn tại" });
+                console.log(err);
+                return;
+            }
+        })
     }
     const user = new User(req.body);
-    // if(req.body.avatar != null){
-    //     let image = await UploadImage.uploadFile(req.body.avatar);
-    //     user.avatar = image.Location;
-    // }
     user.save()
         .then(async user => {
             const doctor = new Doctor(req.body);
             doctor.idUser = user._id;
-            // if(req.body.image != null){
-            //     let image = await UploadImage.uploadFile(req.body.image);
-            //     doctor.image = image.Location;
-            // }
             doctor.save().then(doctor => {
                     res.status(200).json({ "message": "Tạo thành công" });
                 })
@@ -108,12 +104,9 @@ const getOneById = function(req, res) {
                     "phoneNumber": user.phoneNumber,
                     "mail": user.mail,
                     "nickname": doctor.nickname,
-                    "image": doctor.image,
                     "trainingPlaces": doctor.trainingPlaces,
                     "degree": doctor.degree,
                     "description": doctor.description,
-                    "specialist": doctor.specialist,
-                    "workingProcess": doctor.workingProcess,
                     "Faculty": faculty,
                     "Role": user.idRole.name,
                     "idAccount": user.idAccount,
@@ -147,12 +140,9 @@ const getAll = function(req, res) {
                         "phoneNumber": user.phoneNumber,
                         "mail": user.mail,
                         "nickname": doctor.nickname,
-                        "image": doctor.image,
                         "trainingPlaces": doctor.trainingPlaces,
                         "degree": doctor.degree,
                         "description": doctor.description,
-                        "specialist": doctor.specialist,
-                        "workingProcess": doctor.workingProcess,
                         "Faculty": faculty,
                         "Role": user.idRole.name,
                         "idAccount": user.idAccount,

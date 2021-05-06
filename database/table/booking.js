@@ -3,17 +3,18 @@ var BookingScheme = mongoose.Schema({
     idDiagnostic: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'diagnostic',
-        default: null
     },
     idDoctor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'doctor',
-        default: null
     },
     idFuculty: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'faculty',
-        default: null
+    },
+    idMember: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'member',
     },
     customer:{
         type: String
