@@ -10,7 +10,7 @@ function delay(time) {
 
 const create = async function (req, res) {
     if (!req.body.fullname ){ 
-        res.status(400).send({"message":"Full name is require"});
+        res.status(400).send({"message":"Không bỏ trống tên!"});
         return;
     }
     const user = new User(req.body);
