@@ -7,6 +7,10 @@ var OderSchema = mongoose.Schema({
     price: {
         type: Number,
         default: 100000
+    },
+    status:{
+        type: Boolean,
+        default: false
     }
 },{
     collection: 'order'

@@ -7,9 +7,6 @@ var DoctorSchema = mongoose.Schema({
     nickname:{
         type: String
     },
-    image:{
-        type: String
-    },
     trainingPlaces:[{
         type: String
     }], 
@@ -19,13 +16,6 @@ var DoctorSchema = mongoose.Schema({
     description: {
         type: String
     },
-    specialist: {
-        type: String
-    },
-    workingProcess: [{
-        type: String,
-        default: null
-    }],
     idFaculty:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'faculty',

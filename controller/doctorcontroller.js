@@ -2,7 +2,8 @@ const express = require('express');
 const User = require('./../database/table/user');
 const Doctor = require('./../database/table/doctor');
 const Role = require('./../database/table/role');
-const UploadImage = require('./upload');
+const Account = require('./../database/table/account');
+const account = require('./../database/table/account');
 
 
 function delay(time) {
@@ -57,6 +58,7 @@ const createByAdmin = (req, res) => {
     tk.save()
         .then(() => {
             const user = new User(req.body);
+            user.idAccount = tk._id;
             user.save()
                 .then(async user => {
                     const doctor = new Doctor(req.body);
@@ -90,11 +92,6 @@ const getOneById = function(req, res) {
             console.log(err);
         } else {
             var newjson = [];
-            //const account = Account.find({}).populate('idRole');
-            let faculty = '';
-            await Doctor.findById(doctor._id, (err, doc) => {
-                faculty = doc.idFaculty;
-            }).populate('idFaculty');
             await User.findById(doctor.idUser, (err, user) => {
                 newjson = [{
                     "_id": doctor._id,
@@ -107,30 +104,26 @@ const getOneById = function(req, res) {
                     "trainingPlaces": doctor.trainingPlaces,
                     "degree": doctor.degree,
                     "description": doctor.description,
-                    "Faculty": faculty,
+                    "Faculty": doctor.idFaculty,
                     "Role": user.idRole.name,
                     "idAccount": user.idAccount,
                     "listDiagnostic": doctor.listDiagnostic
                 }];
             }).populate('idAccount').populate('idRole');
+            await delay(500);
             res.status(200).json(newjson);
         }
-    });
+    }).populate('idFaculty');
 }
 
 const getAll = function(req, res) {
     Doctor.find(async function(err, doctors) {
-
         if (err) {
             res.status(400).send({ "message": "fail to get" });
             console.log(err);
         } else {
             var newjson = [];
             doctors.map(async function(doctor, err) {
-                let faculty = '';
-                await Doctor.findById(doctor._id, (err, doc) => {
-                    faculty = doc.idFaculty;
-                }).populate('idFaculty');
                 await User.findById(doctor.idUser, (err, user) => {
                     json = {
                         "_id": doctor._id,
@@ -143,7 +136,7 @@ const getAll = function(req, res) {
                         "trainingPlaces": doctor.trainingPlaces,
                         "degree": doctor.degree,
                         "description": doctor.description,
-                        "Faculty": faculty,
+                        "Faculty": doctor.idFaculty,
                         "Role": user.idRole.name,
                         "idAccount": user.idAccount,
                         "listDiagnostic": doctor.listDiagnostic
@@ -151,11 +144,11 @@ const getAll = function(req, res) {
                     newjson.push(json);
                 }).populate('idAccount').populate('idRole');
             });
-            await delay(3000);
+            await delay(2000);
             res.status(200).json(newjson);
             //return newjson;
         }
-    });
+    }).populate('idFaculty');
 }
 
 const getByFaculty = function(req, res) {
@@ -226,17 +219,29 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Doctor.findById({ _id: req.params.id }, function(err, doctor) {
         if (err) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(404).send({ "message": "Bác sĩ không tồn tại" });
             console.log(err);
+            return;
         } else {
             User.findById({ _id: doctor.idUser }, function(err, user) {
                 if (err) {
-                    res.status(404).send({ "message": "Data is not found" });
+                    res.status(404).send({ "message": "Lỗi không tìm thấy thông tin" });
                     console.log(err);
+                    return;
                 } else {
-                    user.remove();
-                    doctor.remove();
-                    res.status(200).json({ "message": "Successfully removed" });
+                    Account.findById({ _id: user.idAccount }, function(err, account){
+                        if (err) {
+                            res.status(404).send({ "message": "Lỗi không tìm thấy thông tin" });
+                            console.log(err);
+                            return;
+                        } else {
+                            account.remove();
+                            user.remove();
+                            doctor.remove();
+                            res.status(200).json({ "message": "Xóa thành công" });
+                            return;
+                        }
+                    })
                 }
             });
         }
