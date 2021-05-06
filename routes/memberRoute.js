@@ -7,7 +7,7 @@ const controller = require('./../controller/memberController');
 
 // Defined store route
 router.route('/create').post(controller.create);
-
+router.route('/admin/create').post(controller.createByAdmin);
 // Defined get data(index or listing) route
 router.route('/get').get(controller.getAll);
 

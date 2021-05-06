@@ -6,79 +6,107 @@ const UploadImage = require('./upload');
 
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
-  }
+}
 
-const create = async function (req, res) {
-    if (!req.body.fullname ){ 
-        res.status(400).send({"message":"Full name is require"});
+const create = async function(req, res) {
+    if (!req.body.fullname) {
+        res.status(400).send({ "message": "Không thể bỏ trống tên!" });
         return;
+    } else if (!req.body.idRole != null) {
+        let role = Role.findById(req.body.idRole);
+        if (!role) {
+            res.status(400).send({ "message": "Chức vụ không tồn tại!" });
+            return;
+        }
     }
     let user = new User(req.body);
-    // if(req.body.avatar != null){
-    //     let image = await UploadImage.uploadFile(req.body.avatar);
-    //     user.avatar = image.Location;
-    // }
     user.save()
         .then(user => {
             const member = new Member();
             member.idUser = user._id;
-            member.save().then(member =>{
-                res.status(200).json({"message":"Create successfully"});
-            })
-            .catch(err => {
-                res.status(400).send({"message":"unable to save to database"});
-                console.log(err);
-            })
+            member.save().then(member => {
+                    res.status(200).json({ "message": "Tạo thành công" });
+                })
+                .catch(err => {
+                    res.status(400).send({ "message": "Không thành công!" });
+                    console.log(err);
+                })
         })
         .catch(err => {
-            res.status(400).send({"message":"unable to save to database"});
+            res.status(400).send({ "message": "Không thành công!" });
             console.log(err);
         });
 }
 
 
-const getOneById = function (req, res) {
-    let id = req.params.id;
-    Member.findById(id, async function (err, member){
-        if (!member){
-            res.status(404).send({"message":"data is not found"});
-            console.log(err);
+const createByAdmin = (req, res) => {
+    if (!req.body.fullname) {
+        res.status(400).send({ "message": "Không thể bỏ trống tên" });
+        return;
+    } else if (!req.body.idRole != null) {
+        let role = Role.findById(req.body.idRole);
+        if (!role) {
+            res.status(400).send({ "message": "Chức vụ không tồn tại!" });
+            return;
         }
-        else {
+    }
+    let user = new User(req.body);
+    user.save()
+        .then(user => {
+            const member = new Member();
+            member.idUser = user._id;
+            member.save().then(member => {
+                    res.status(200).json({ "message": "Tạo thành công" });
+                })
+                .catch(err => {
+                    res.status(400).send({ "message": "Không thành công!" });
+                    console.log(err);
+                })
+        })
+        .catch(err => {
+            res.status(400).send({ "message": "Không thành công!" });
+            console.log(err);
+        });
+}
+
+
+const getOneById = function(req, res) {
+    let id = req.params.id;
+    Member.findById(id, async function(err, member) {
+        if (!member) {
+            res.status(404).send({ "message": "data is not found" });
+            console.log(err);
+        } else {
             var newjson = [];
             //const account = Account.find({}).populate('idRole');
-            await User.findById(member.idUser , (err, user)=>{
-                newjson = [
-                    {
-                        "_id": member._id,
-                        "fullname": user.fullname,
-                        "avatar": user.avatar,
-                        "address": user.address,
-                        "phoneNumber": user.phoneNumber,
-                        "mail": user.mail,
-                        "Role": user.idRole.name,
-                        "idAccount": user.idAccount
-                    }
-                ];
+            await User.findById(member.idUser, (err, user) => {
+                newjson = [{
+                    "_id": member._id,
+                    "fullname": user.fullname,
+                    "avatar": user.avatar,
+                    "address": user.address,
+                    "phoneNumber": user.phoneNumber,
+                    "mail": user.mail,
+                    "Role": user.idRole.name,
+                    "idAccount": user.idAccount
+                }];
             }).populate('idAccount').populate('idRole');
             res.status(200).json(newjson);
         }
     });
 }
 
-const getAll = function (req, res) {
-    Member.find( async function(err, members){
-        
-        if(err){
-            res.status(400).send({"message":"fail to get"});
+const getAll = function(req, res) {
+    Member.find(async function(err, members) {
+
+        if (err) {
+            res.status(400).send({ "message": "fail to get" });
             console.log(err);
-        }
-        else { 
+        } else {
             var newjson = [];
-            members.map(async function (member, err) {
+            members.map(async function(member, err) {
                 await User.findById(member.idUser, (err, user) => {
-                    json =
-                    {
+                    json = {
                         "_id": member._id,
                         "fullname": user.fullname,
                         "avatar": user.avatar,
@@ -99,16 +127,15 @@ const getAll = function (req, res) {
 }
 
 
-const updateById = function (req, res) {
-    Member.findById(req.params.id,async function(err, member) {
-        if (!member){
-            res.status(404).send({"message":"Data is not found"});
+const updateById = function(req, res) {
+    Member.findById(req.params.id, async function(err, member) {
+        if (!member) {
+            res.status(404).send({ "message": "Data is not found" });
             console.log(err);
-        }
-        else {
-            User.findById(member.idUser , async function(err, user) {
-                if (!req.body.fullname ){ 
-                    res.status(400).send({"message":"user full name is require"});
+        } else {
+            User.findById(member.idUser, async function(err, user) {
+                if (!req.body.fullname) {
+                    res.status(400).send({ "message": "user full name is require" });
                     return;
                 }
                 // if(req.body.avatar != null){
@@ -123,10 +150,10 @@ const updateById = function (req, res) {
                 user.idAccount = req.body.idAccount;
                 user.idRole = req.body.idRole;
                 user.save().then(user => {
-                    res.status(200).json('Update complete');
-                })
+                        res.status(200).json('Update complete');
+                    })
                     .catch(err => {
-                        res.status(400).send({"message":"unable to update the database"});
+                        res.status(400).send({ "message": "unable to update the database" });
                         console.log(err);
                     });
             });
@@ -134,28 +161,28 @@ const updateById = function (req, res) {
     });
 }
 
-const deleteById = function (req, res) {
-    Member.findById({_id: req.params.id}, function(err, member){
-        if(err){
-            res.status(404).send({"message":"Data is not found"});
+const deleteById = function(req, res) {
+    Member.findById({ _id: req.params.id }, function(err, member) {
+        if (err) {
+            res.status(404).send({ "message": "Data is not found" });
             console.log(err);
-        }
-        else{
-            User.findById({_id: member.idUser}, function(err, user){
-                if(err){
-                    res.status(404).send({"message":"Data is not found"});
+        } else {
+            User.findById({ _id: member.idUser }, function(err, user) {
+                if (err) {
+                    res.status(404).send({ "message": "Data is not found" });
                     console.log(err);
-                }
-                else{
+                } else {
                     user.remove();
-                }});
+                }
+            });
             member.remove();
-            res.status(200).json({"message":"Successfully removed"});
+            res.status(200).json({ "message": "Successfully removed" });
         }
     });
 }
 
 module.exports = {
+    createByAdmin,
     create,
     getAll,
     getOneById,

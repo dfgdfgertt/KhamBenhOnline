@@ -4,20 +4,20 @@ const Role = require('./../database/table/role');
 const User = require('./../database/table/user');
 const UploadImage = require('./upload');
 
-const create = async function (req, res) {
-    if (!req.body.fullname ){ 
-        res.status(400).send({"message":"Full name is require"});
+const create = async function(req, res) {
+    if (!req.body.fullname) {
+        res.status(400).send({ "message": "Full name is require" });
         return;
-    }else if (!req.body.idRole != null){
-       let role = Role.findById(req.body.idRole);
-       if(!role){
-        res.status(400).send({"message":"Role not found"});
-        return;
-       }
-    }else if (!req.body.idAccount != null){
+    } else if (!req.body.idRole != null) {
+        let role = Role.findById(req.body.idRole);
+        if (!role) {
+            res.status(400).send({ "message": "Role not found" });
+            return;
+        }
+    } else if (!req.body.idAccount != null) {
         let account = Account.findById(req.body.idAccount)
-        if (!account){
-            res.status(400).send({"message":"Account not found"});
+        if (!account) {
+            res.status(400).send({ "message": "Account not found" });
             return;
         }
     }
@@ -28,61 +28,81 @@ const create = async function (req, res) {
     // }
     user.save()
         .then(user => {
-            res.status(200).json({"message":'create successfully'});
+            res.status(200).json({ "message": 'create successfully' });
             return user.id;
         })
         .catch(err => {
-            res.status(400).send({"message":"unable to save to database"});
+            res.status(400).send({ "message": "unable to save to database" });
             console.log(err);
         });
 }
 
-const getAll = function (req, res) {
-    User.find(function(err, users){
-        if(err){
-            res.status(400).send({"message":"fail to get"});
-            console.log(err);
+const createByAdmin = (req, res) => {
+    if (!req.body.fullname) {
+        res.status(400).send({ "message": "Không thể bỏ trống tên" });
+        return;
+    } else if (!req.body.idRole != null) {
+        let role = Role.findById(req.body.idRole);
+        if (!role) {
+            res.status(400).send({ "message": "Chức vụ không tồn tại!" });
+            return;
         }
-        else {
+    }
+    let user = new User(req.body);
+    user.save()
+        .then(user => {
+            res.status(200).json({ "message": 'create successfully' });
+            return user.id;
+        })
+        .catch(err => {
+            res.status(400).send({ "message": "unable to save to database" });
+            console.log(err);
+        });
+}
+
+const getAll = function(req, res) {
+    User.find(function(err, users) {
+        if (err) {
+            res.status(400).send({ "message": "fail to get" });
+            console.log(err);
+        } else {
             res.status(200).json(users);
             return users;
         }
     });
 }
 
-const getOneById = function (req, res) {
+const getOneById = function(req, res) {
     let id = req.params.id;
-    User.findById(id, function (err, user){
-        if (!user){
-            res.status(404).send({"message":"data is not found"});
+    User.findById(id, function(err, user) {
+        if (!user) {
+            res.status(404).send({ "message": "data is not found" });
             console.log(err);
-        }
-        else {
+        } else {
             res.status(200).json(user);
         }
     });
 }
 
-const updateById = function (req, res) {
+const updateById = function(req, res) {
     User.findById(req.params.id, async function(err, user) {
-        if (!user){
-            res.status(404).send({"message":"Data is not found"});
+        if (!user) {
+            res.status(404).send({ "message": "Data is not found" });
             console.log(err);
-        }
-        else {
-            if (!req.body.fullname ){ 
-                res.status(400).send({"message":"user full name is require"});
+        } else {
+            if (!req.body.fullname) {
+                res.status(400).send({ "message": "user full name is require" });
                 return;
-            }else if (!req.body.idRole != null){
-               let role = Role.findById(req.body.idRole);
-               if(!role){
-                res.status(400).send({"message":"Role not found"});
-                return;
-               }
-            }else if (!req.body.idAccount != null){
+            } else if (!req.body.idRole != null) {
+                let role = Role.findById(req.body.idRole);
+                if (!role) {
+                    res.status(400).send({ "message": "Role not found" });
+                    return;
+                }
+            } else if (!req.body.idAccount != null) {
                 let account = Account.findById(req.body.idAccount)
-                if (!account){
-                    res.status(400).send({"message":"Account not found"});
+                if (!account) {
+                    res.status(400).send({ "message": "Account not found" });
                     return;
                 }
             }
@@ -98,24 +118,23 @@ const updateById = function (req, res) {
             user.idAccount = req.body.idAccount;
             user.idRole = req.body.idRole;
             user.save().then(user => {
-                res.status(200).json({"message":"Update complete"});
-            })
+                    res.status(200).json({ "message": "Update complete" });
+                })
                 .catch(err => {
-                    res.status(400).send({"message":"unable to update the database"});
+                    res.status(400).send({ "message": "unable to update the database" });
                     console.log(err);
                 });
         }
     });
 }
 
-const deleteById = function (req, res) {
-    User.findByIdAndRemove({_id: req.params.id}, function(err, user){
-        if(err){
-            res.status(404).send({"message":"Data is not found"});
+const deleteById = function(req, res) {
+    User.findByIdAndRemove({ _id: req.params.id }, function(err, user) {
+        if (err) {
+            res.status(404).send({ "message": "Data is not found" });
             console.log(err);
-        }
-        else{
-            res.status(200).json({"message":"Successfully removed"});
+        } else {
+            res.status(200).json({ "message": "Successfully removed" });
         }
     });
 }
