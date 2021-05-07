@@ -3,7 +3,6 @@ const User = require('./../database/table/user');
 const Doctor = require('./../database/table/doctor');
 const Role = require('./../database/table/role');
 const Account = require('./../database/table/account');
-const account = require('./../database/table/account');
 
 
 function delay(time) {
@@ -43,17 +42,29 @@ const create = async function(req, res) {
         });
 }
 
-const createByAdmin = (req, res) => {
+const createByAdmin = async (req, res) => {
     if (!req.body.fullname) {
         res.status(400).send({ "message": "Không thể bỏ trống tên!" });
         return;
-    } else if (!req.body.idRole != null) {
+    }
+    if (!req.body.idRole != null) {
         let role = Role.findById(req.body.idRole);
         if (!role) {
             res.status(400).send({ "message": "Role not found" });
             return;
         }
     }
+    await Account.findOne({username: req.body.username},function(err, account) {
+        if (err) {
+              console.loh(err);
+        }
+        else{
+            if (account){
+                res.status(400).send({"message":"Username already exists"});
+                return;
+            }
+        }
+    })
     const tk = new Account(req.body);
     tk.save()
         .then(() => {
@@ -70,11 +81,14 @@ const createByAdmin = (req, res) => {
                         .catch(err => {
                             res.status(400).send({ "message": "Không thành công!" });
                             console.log(err);
+                            user.remove();
+                            tk.remove();
                         })
                 })
                 .catch(err => {
                     res.status(400).send({ "message": "Không thành công!" });
                     console.log(err);
+                    tk.remove();
                 });
         })
         .catch(err => {

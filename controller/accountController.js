@@ -22,7 +22,7 @@ const create = async function (req, res) {
             }
         }
         }
-    );
+    )
     let account = new Account(req.body);
     account.save()
         .then(account => {
