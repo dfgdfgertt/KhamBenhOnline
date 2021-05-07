@@ -26,10 +26,10 @@ var BookingScheme = mongoose.Schema({
         type: String
     },
     day:{
-        type: date
+        type: Date
     },
     time:{
-        type: time
+        type: Date
     }
 },{
     collection: 'booking'

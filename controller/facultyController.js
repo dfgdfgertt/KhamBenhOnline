@@ -16,7 +16,6 @@ const create = async function (req, res) {
     //khoa.description = req.body.description;
     await khoa.save()
         .then(khoa => {
-            console.log(khoa);
             res.status(200).json({"message": "faculty create successfully"});
         })
         .catch(err => {

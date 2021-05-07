@@ -9,6 +9,9 @@ var FacultySchema = mongoose.Schema({
     },
     description:{
         type: String
+    },
+    price:{
+        type: Number
     }
 },{
     collection: 'faculty'

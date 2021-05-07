@@ -67,6 +67,7 @@ const createByAdmin = async (req, res) => {
     })
     const tk = new Account(req.body);
     tk.save()
+    
         .then(() => {
             const user = new User(req.body);
             user.idAccount = tk._id;
@@ -95,6 +96,76 @@ const createByAdmin = async (req, res) => {
             res.status(400).send({ "message": "Không thể tạo tài khoản!" });
             console.log(err);
         });
+}
+
+const updateByIdByAdmin = function(req, res){
+    //console.log(req.body);
+    Doctor.findById(req.params.id, async function(err, doctor) {
+        if (!doctor) {
+            res.status(404).send({ "message": "Data is not found" });
+            console.log(err);
+        } else {
+            User.findById(doctor.idUser, async function(err, user) {
+                if (!req.body.fullname) {
+                    res.status(400).send({ "message": "user full name is require" });
+                    return;
+                }
+                // if(req.body.avatar != null){
+                //     let image = await UploadImage.uploadFile(req.body.avatar);
+                //     user.avatar = image.Location;
+                // }
+                user.avatar = req.body.avatar;
+                user.fullname = req.body.fullname;
+                user.address = req.body.address;
+                user.phoneNumber = req.body.phoneNumber;
+                user.mail = req.body.mail;
+                //user.idAccount = req.body.idAccount;
+                user.idRole = req.body.idRole;
+                Account.findOne({username: req.body.username}, (err , acc)=>{
+                    if (err) {
+                        res.status(404).send({ "message": "Data is not found" });
+                        console.log(err);
+                        return;
+                    } else {
+                        if (acc && acc._id == user.idAccount) {
+                            res.status(404).send({ "message": "Tài khoản đã tồn tại" });
+                            console.log(err);
+                            return;
+                        }else{
+                            Account. findById(user.idAccount, (err , acc)=>{
+                                if (err) {
+                                    res.status(404).send({ "message": "Data is not found" });
+                                    console.log(err);
+                                } else {
+                                    acc.username = req.body.username;
+                                    acc.password = req.body.password;
+                                    acc.save().then(async acc =>{
+                                        user.save().then(async user => {
+                                            doctor.nickname = req.body.nickname;
+                                            doctor.trainingPlaces = req.body.trainingPlaces;
+                                            doctor.degree = req.body.degree;
+                                            doctor.description = req.body.description;
+                                            doctor.listDiagnostic = req.body.listDiagnostic;
+                                            doctor.idFaculty = req.body.idFaculty;
+                                            doctor.save().then(doctor => {
+                                                res.status(200).json({ "message": "Update complete" });
+                                            }).catch(err => {
+                                                res.status(400).send({ "message": "unable to update the database" });
+                                                console.log(err);
+                                            });
+                                        })
+                                    }).catch(err => {
+                                        res.status(400).send({ "message": "unable to update the database" });
+                                        console.log(err);
+                                    });
+                                }
+                            })
+                        }
+                    }
+                })
+            });
+        }
+    });
 }
 
 
@@ -269,5 +340,6 @@ module.exports = {
     getOneById,
     updateById,
     deleteById,
-    getByFaculty
+    getByFaculty,
+    updateByIdByAdmin
 };

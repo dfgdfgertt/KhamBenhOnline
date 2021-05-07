@@ -14,6 +14,7 @@ const MemberRoute = require('./routes/memberRoute');
 const DoctorRoute = require('./routes/doctorRoute');
 const LoginRoute = require('./routes/loginRoute');
 const Diagnostic = require('./routes/diagnosticRoute');
+const Booking = require('./routes/bookingRoute');
 
 app.use(express.static("public"));
  
@@ -33,6 +34,7 @@ app.use('/api/member', MemberRoute);
 app.use('/api/doctor', DoctorRoute);
 app.use('/api/login', LoginRoute);
 app.use('/api/diagnostic', Diagnostic);
+app.use('/api/booking', Booking);
 
 
 app.listen(PORT, function() {
