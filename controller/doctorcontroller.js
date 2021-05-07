@@ -127,7 +127,7 @@ const updateByIdByAdmin = function(req, res){
                         console.log(err);
                         return;
                     } else {
-                        if (acc && acc._id == user.idAccount) {
+                        if (acc && acc._id != user.idAccount) {
                             res.status(404).send({ "message": "Tài khoản đã tồn tại" });
                             console.log(err);
                             return;
