@@ -16,18 +16,6 @@ const create = function(req, res) {
     const booking = new Booking(req.body);
     const order = new Order();
     order.idBooking = booking._id;
-    var faculty = Faculty.findById(req.body.idFuculty, (err, faculty)=>{
-        if (err) {
-            console.log(faculty);
-            res.status(400).send({ "message": "Khoa không tìm thấy" });
-            console.log(err);
-            return;
-        } else {
-            //console.log(faculty);
-            return faculty.price;
-        }
-    })
-    //console.log(faculty);
     return
     order.save().then(oder =>{
         booking.save().then(booking => {

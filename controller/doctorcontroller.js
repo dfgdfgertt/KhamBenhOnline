@@ -4,24 +4,13 @@ const Doctor = require('./../database/table/doctor');
 const Role = require('./../database/table/role');
 const Account = require('./../database/table/account');
 
-
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-}
-
 const create = async function(req, res) {
     if (!req.body.fullname) {
         res.status(400).send({ "message": "Không thể bỏ trống tên!" });
         return;
-    }
-    if (!req.body.idRole != null) {
-        Role.findById(req.body.idRole, (err, role)=>{
-            if (err) {
-                res.status(400).send({ "message": "Chức vụ không tồn tại" });
-                console.log(err);
-                return;
-            }
-        })
+    }else if (!req.body.password){
+        res.status(400).send({"message":"Password is require"});
+        return;
     }
     const user = new User(req.body);
     user.save()
@@ -30,10 +19,13 @@ const create = async function(req, res) {
             doctor.idUser = user._id;
             doctor.save().then(doctor => {
                     res.status(200).json({ "message": "Tạo thành công" });
+                    return;
                 })
                 .catch(err => {
+                    user.remove();
                     res.status(400).send({ "message": "Không thành công!" });
                     console.log(err);
+                    return;
                 })
         })
         .catch(err => {
@@ -46,13 +38,9 @@ const createByAdmin = async (req, res) => {
     if (!req.body.fullname) {
         res.status(400).send({ "message": "Không thể bỏ trống tên!" });
         return;
-    }
-    if (!req.body.idRole != null) {
-        let role = Role.findById(req.body.idRole);
-        if (!role) {
-            res.status(400).send({ "message": "Role not found" });
-            return;
-        }
+    }else if (!req.body.password){
+        res.status(400).send({"message":"Password is require"});
+        return;
     }
     await Account.findOne({username: req.body.username},function(err, account) {
         if (err) {
@@ -67,7 +55,6 @@ const createByAdmin = async (req, res) => {
     })
     const tk = new Account(req.body);
     tk.save()
-    
         .then(() => {
             const user = new User(req.body);
             user.idAccount = tk._id;
@@ -106,21 +93,12 @@ const updateByIdByAdmin = function(req, res){
             console.log(err);
         } else {
             User.findById(doctor.idUser, async function(err, user) {
-                if (!req.body.fullname) {
-                    res.status(400).send({ "message": "user full name is require" });
-                    return;
-                }
-                // if(req.body.avatar != null){
-                //     let image = await UploadImage.uploadFile(req.body.avatar);
-                //     user.avatar = image.Location;
-                // }
                 user.avatar = req.body.avatar;
                 user.fullname = req.body.fullname;
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
                 user.mail = req.body.mail;
-                //user.idAccount = req.body.idAccount;
-                user.idRole = req.body.idRole;
+                //user.idRole = req.body.idRole;
                 Account.findOne({username: req.body.username}, (err , acc)=>{
                     if (err) {
                         res.status(404).send({ "message": "Data is not found" });
@@ -260,29 +238,17 @@ const updateById = function(req, res) {
                     res.status(400).send({ "message": "user full name is require" });
                     return;
                 }
-                // if(req.body.avatar != null){
-                //     let image = await UploadImage.uploadFile(req.body.avatar);
-                //     user.avatar = image.Location;
-                // }
                 user.avatar = req.body.avatar;
                 user.fullname = req.body.fullname;
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
                 user.mail = req.body.mail;
-                user.idAccount = req.body.idAccount;
                 user.idRole = req.body.idRole;
                 user.save().then(async user => {
-                        // if(req.body.image != null){
-                        //     let image2 = await UploadImage.uploadFile(req.body.image);
-                        //     doctor.image = image2.Location;
-                        // }
-                        doctor.image = req.body.image;
                         doctor.nickname = req.body.nickname;
                         doctor.trainingPlaces = req.body.trainingPlaces;
                         doctor.degree = req.body.degree;
                         doctor.description = req.body.description;
-                        doctor.specialist = req.body.specialist;
-                        doctor.workingProcess = req.body.workingProcess;
                         doctor.listDiagnostic = req.body.listDiagnostic;
                         doctor.idFaculty = req.body.idFaculty;
                         doctor.save().then(doctor => {

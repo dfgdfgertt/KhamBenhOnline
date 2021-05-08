@@ -16,6 +16,7 @@ router.route('/get/:id').get(controller.getOneById);
 
 //  Defined update route
 router.route('/update/:id').put(controller.updateById);
+router.route('/admin/update/:id').put(controller.updateByIdByAdmin);
 
 // Defined delete | remove | destroy route
 router.route('/delete/:id').delete(controller.deleteById);
