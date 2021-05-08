@@ -176,29 +176,29 @@ const getOneById = function(req, res) {
             res.status(404).send({ "message": "data is not found" });
             console.log(err);
         } else {
-            var newjson = [];
-            await User.findById(doctor.idUser, (err, user) => {
-                newjson = [{
-                    "_id": doctor._id,
-                    "fullname": user.fullname,
-                    "avatar": user.avatar,
-                    "address": user.address,
-                    "phoneNumber": user.phoneNumber,
-                    "mail": user.mail,
-                    "nickname": doctor.nickname,
-                    "trainingPlaces": doctor.trainingPlaces,
-                    "degree": doctor.degree,
-                    "description": doctor.description,
-                    "Faculty": doctor.idFaculty,
-                    "Role": user.idRole.name,
-                    "idAccount": user.idAccount,
-                    "listDiagnostic": doctor.listDiagnostic
-                }];
-            }).populate('idAccount').populate('idRole');
-            await delay(500);
-            res.status(200).json(newjson);
+            // var newjson = [];
+            // await User.findById(doctor.idUser, (err, user) => {
+            //     newjson = [{
+            //         "_id": doctor._id,
+            //         "fullname": user.fullname,
+            //         "avatar": user.avatar,
+            //         "address": user.address,
+            //         "phoneNumber": user.phoneNumber,
+            //         "mail": user.mail,
+            //         "nickname": doctor.nickname,
+            //         "trainingPlaces": doctor.trainingPlaces,
+            //         "degree": doctor.degree,
+            //         "description": doctor.description,
+            //         "Faculty": doctor.idFaculty,
+            //         "Role": user.idRole.name,
+            //         "idAccount": user.idAccount,
+            //         "listDiagnostic": doctor.listDiagnostic
+            //     }];
+            // }).populate('idAccount').populate('idRole');
+            // await delay(500);
+            res.status(200).json(doctor);
         }
-    }).populate('idFaculty');
+    }).populate('idFaculty').populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
 }
 
 const getAll = function(req, res) {
@@ -207,33 +207,33 @@ const getAll = function(req, res) {
             res.status(400).send({ "message": "fail to get" });
             console.log(err);
         } else {
-            var newjson = [];
-            doctors.map(async function(doctor, err) {
-                await User.findById(doctor.idUser, (err, user) => {
-                    json = {
-                        "_id": doctor._id,
-                        "fullname": user.fullname,
-                        "avatar": user.avatar,
-                        "address": user.address,
-                        "phoneNumber": user.phoneNumber,
-                        "mail": user.mail,
-                        "nickname": doctor.nickname,
-                        "trainingPlaces": doctor.trainingPlaces,
-                        "degree": doctor.degree,
-                        "description": doctor.description,
-                        "Faculty": doctor.idFaculty,
-                        "Role": user.idRole.name,
-                        "idAccount": user.idAccount,
-                        "listDiagnostic": doctor.listDiagnostic
-                    };
-                    newjson.push(json);
-                }).populate('idAccount').populate('idRole');
-            });
-            await delay(2000);
-            res.status(200).json(newjson);
+            // var newjson = [];
+            // doctors.map(async function(doctor, err) {
+            //     await User.findById(doctor.idUser, (err, user) => {
+            //         json = {
+            //             "_id": doctor._id,
+            //             "fullname": user.fullname,
+            //             "avatar": user.avatar,
+            //             "address": user.address,
+            //             "phoneNumber": user.phoneNumber,
+            //             "mail": user.mail,
+            //             "nickname": doctor.nickname,
+            //             "trainingPlaces": doctor.trainingPlaces,
+            //             "degree": doctor.degree,
+            //             "description": doctor.description,
+            //             "Faculty": doctor.idFaculty,
+            //             "Role": user.idRole.name,
+            //             "idAccount": user.idAccount,
+            //             "listDiagnostic": doctor.listDiagnostic
+            //         };
+            //         newjson.push(json);
+            //     }).populate('idAccount').populate('idRole');
+            // });
+            //await delay(5000);
+            res.status(200).json(doctors);
             //return newjson;
         }
-    }).populate('idFaculty');
+    }).populate('idFaculty').populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
 }
 
 const getByFaculty = function(req, res) {
