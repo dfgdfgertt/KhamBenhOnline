@@ -36,8 +36,12 @@ const createByAdmin = async (req, res) => {
     if (!req.body.fullname) {
         res.status(400).send({ "message": "Không thể bỏ trống tên" });
         return;
-    }else if (!req.body.password){
-        res.status(400).send({"message":"Password is require"});
+    }else if (!req.body.username){
+        res.status(400).send({"message":"Không thể để trống tài khoản!"});
+        return;
+    }
+    else if (!req.body.password){
+        res.status(400).send({"message":"Không thể để trống mật khẩu"});
         return;
     }
     await Account.findOne({username: req.body.username},function(err, account) {
