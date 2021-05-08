@@ -35,7 +35,7 @@ const createsymptom = async function (req, res) {
 const getAll = function (req, res) {
     Diagnostic.find( function(err , diagnostics){
         if (err) {
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         } else {
             res.status(200).json(diagnostics);
@@ -47,7 +47,7 @@ const getOneById = function (req, res) {
     let id = req.params.id;
     Diagnostic.findById(id, function (err, diagnostic){
         if (!diagnostic){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -59,14 +59,14 @@ const getOneById = function (req, res) {
 const updateById = function (req, res) {
     Diagnostic.findById(req.params.id, async function(err, diagnostic) {
         if (!diagnostic){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
             return;
         }
         else {
             Faculty.findById(req.body.idFaculty,async (err, faculty)=>{
                 if (err) {
-                    res.status(404).send({"message":"faculty is not found"});
+                    res.status(400).send({"message":"faculty is not found"});
                     console.log(err);
                     return;
                 } else {
@@ -92,7 +92,7 @@ const updateById = function (req, res) {
 const deleteById = function (req, res) {
     Diagnostic.findByIdAndRemove({_id: req.params.id}, function(err, e){
         if(err){
-            res.status(404).json({"message":"Data is not found"});
+            res.status(400).json({"message":"Data is not found"});
             console.log(err);
             return;
         } 

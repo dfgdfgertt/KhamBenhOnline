@@ -89,7 +89,7 @@ const createByAdmin = async (req, res) => {
 const updateByIdByAdmin = function(req, res){
     Member.findById(req.params.id, async function(err, member) {
         if (!member) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Data is not found" });
             console.log(err);
         } else {
             User.findById(member.idUser, async function(err, user) {
@@ -101,18 +101,18 @@ const updateByIdByAdmin = function(req, res){
                 //user.idRole = req.body.idRole;
                 Account.findOne({username: req.body.username}, (err , acc)=>{
                     if (err) {
-                        res.status(404).send({ "message": "Data is not found" });
+                        res.status(400).send({ "message": "Data is not found" });
                         console.log(err);
                         return;
                     } else {
                         if (acc && acc._id != user.idAccount) {
-                            res.status(404).send({ "message": "Tài khoản đã tồn tại" });
+                            res.status(400).send({ "message": "Tài khoản đã tồn tại" });
                             console.log(err);
                             return;
                         }else{
                             Account. findById(user.idAccount, (err , acc)=>{
                                 if (err) {
-                                    res.status(404).send({ "message": "Data is not found" });
+                                    res.status(400).send({ "message": "Data is not found" });
                                     console.log(err);
                                 } else {
                                     acc.username = req.body.username;
@@ -147,7 +147,7 @@ const getOneById = function(req, res) {
     let id = req.params.id;
     Member.findById(id, async function(err, member) {
         if (!member) {
-            res.status(404).send({ "message": "data is not found" });
+            res.status(400).send({ "message": "data is not found" });
             console.log(err);
         } else {
             res.status(200).json(member);
@@ -170,7 +170,7 @@ const getAll = function(req, res) {
 const updateById = function(req, res) {
     Member.findById(req.params.id, async function(err, member) {
         if (!member) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Data is not found" });
             console.log(err);
         } else {
             User.findById(member.idUser, async function(err, user) {
@@ -198,12 +198,12 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Member.findById({ _id: req.params.id }, function(err, member) {
         if (err) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Data is not found" });
             console.log(err);
         } else {
             User.findById({ _id: member.idUser }, function(err, user) {
                 if (err) {
-                    res.status(404).send({ "message": "Data is not found" });
+                    res.status(400).send({ "message": "Data is not found" });
                     console.log(err);
                 } else {
                     user.remove();

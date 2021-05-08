@@ -76,7 +76,7 @@ const getOneById = function(req, res) {
     let id = req.params.id;
     User.findById(id, function(err, user) {
         if (!user) {
-            res.status(404).send({ "message": "data is not found" });
+            res.status(400).send({ "message": "data is not found" });
             console.log(err);
         } else {
             res.status(200).json(user);
@@ -87,7 +87,7 @@ const getOneById = function(req, res) {
 const updateById = function(req, res) {
     User.findById(req.params.id, async function(err, user) {
         if (!user) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Data is not found" });
             console.log(err);
         } else {
             if (!req.body.fullname) {
@@ -131,7 +131,7 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     User.findByIdAndRemove({ _id: req.params.id }, function(err, user) {
         if (err) {
-            res.status(404).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Data is not found" });
             console.log(err);
         } else {
             res.status(200).json({ "message": "Successfully removed" });

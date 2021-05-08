@@ -33,7 +33,7 @@ const getOneById = function (req, res) {
     let id = req.params.id;
     Role.findById(id, function (err, role){
         if (!role){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -45,7 +45,7 @@ const getOneById = function (req, res) {
 const updateById = function (req, res) {
     Role.findById(req.params.id, function(err, role) {
         if (!role){
-            res.status(404).send({"message":"Data is not found"});
+            res.status(400).send({"message":"Data is not found"});
             console.log(err);
         }
         else {
@@ -68,7 +68,7 @@ const updateById = function (req, res) {
 const deleteById = function (req, res) {
     Role.findByIdAndRemove({_id: req.params.id}, function(err, person){
         if(err){
-            res.status(404).send({"message":"Data is not found"});
+            res.status(400).send({"message":"Data is not found"});
             console.log(err);
         }
         else{

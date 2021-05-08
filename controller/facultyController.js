@@ -27,7 +27,7 @@ const create = async function (req, res) {
 const get = function (req, res){
     Khoa.find(function(err, khoas){
         if(err){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -40,7 +40,7 @@ const getOnebyId = function (req, res) {
     let id = req.params.id;
     Khoa.findById(id, function (err, khoa){
         if (!khoa){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         }
         else {
@@ -54,7 +54,7 @@ const getOnebyId = function (req, res) {
 const updateById = function (req, res) {
     Khoa.findById(req.params.id, async function(err, khoa) {
         if (!khoa){
-            res.status(404).send({"message":"data is not found"});
+            res.status(400).send({"message":"data is not found"});
             console.log(err);
         }
         else {
