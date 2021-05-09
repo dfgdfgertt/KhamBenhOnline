@@ -126,6 +126,18 @@ const login = async function (req, res){
                         case 'Member': 
                             memberlogin(account._id, res);
                             break;
+                        case 'Bác sĩ': 
+                            doctorlogin(account._id, res);
+                            break;
+                        case 'Thành viên': 
+                            memberlogin(account._id, res);
+                            break;
+                        case 'Bac si': 
+                            doctorlogin(account._id, res);
+                            break;
+                        case 'Thanh vien': 
+                            memberlogin(account._id, res);
+                            break;
                         default:
                             res.status(400).send({"message":"Login is unsuccessfully"});
                             break;

@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../database/table/user');
 const Account = require('./../database/table/account');
 const Role = require('./../database/table/role');
+const Member = require('./../database/table/member');
 
 const create = async function (req, res) {
     if (!req.body.username){ 
@@ -24,14 +25,47 @@ const create = async function (req, res) {
         }
     )
     let account = new Account(req.body);
-    account.save()
-        .then(account => {
-            res.status(200).json(account);
+    if (!req.body.idRole) {
+        Role.findOne({name: 'Thành viên'}, function (err, role) {
+           if (err) {
+                res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                return;
+           } else {
+               if (!role) {
+                    res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                    return;
+               } else {
+                    account.idRole = role._id;
+                    account.save()
+                    .then(account => {
+                        let user = new User();
+                        user.idAccount = account._id;
+                        user.save()
+                            .then(user =>{
+                                let member = new Member();
+                                member.idUser = user._id;
+                                member.save()
+                                    .then(member =>{
+                                        res.status(200).json({"_id": member._id});
+                                    })
+                                    .catch(err => {
+                                        res.status(400).send({"message":"unable to save to database"});
+                                        console.log(err);
+                                    });
+                            })
+                            .catch(err => {
+                                res.status(400).send({"message":"unable to save to database"});
+                                console.log(err);
+                            });
+                    })
+                    .catch(err => {
+                        res.status(400).send({"message":"unable to save to database"});
+                        console.log(err);
+                    });
+               }
+           }
         })
-        .catch(err => {
-            res.status(400).send({"message":"unable to save to database"});
-            console.log(err);
-        });
+    }
 }
 
 const getAll = function (req, res) {
@@ -80,7 +114,6 @@ const updateById = function (req, res) {
             }
             account.username = req.body.username;
             account.password = req.body.password;
-            account.idRole = req.body.idRole;
             account.save().then(business => {
                 res.status(200).json({"message":"Update complete"});
             })
