@@ -201,31 +201,49 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Member.findById({ _id: req.params.id }, function(err, member) {
         if (err) {
-            res.status(400).send({ "message": "Member is not found" });
+            res.status(400).send({ "message": "Không tìm thấy thành viên" });
             console.log(err);
             return;
         } else {
-            User.findById({ _id: member.idUser }, function(err, user) {
-                if (err) {
-                    res.status(400).send({ "message": "User is not found" });
-                    console.log(err);
-                    return;
-                } else {
-                    Account.findById(user.idAccount, function (err, acc) {
-                        if (err) {
-                            res.status(400).send({ "message": "Account is not found" });
+            if (!member) {
+                res.status(400).send({ "message": "Không tìm thấy thành viên" });
+                console.log(err);
+                return;
+            } else {
+                User.findById({ _id: member.idUser }, function(err, user) {
+                    if (err) {
+                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
+                        console.log(err);
+                        return;
+                    } else {
+                        if (!user) {
+                            res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
                             console.log(err);
                             return;
                         } else {
-                            acc.remove();
+                            Account.findById(user.idAccount, function (err, acc) {
+                                if (err) {
+                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    console.log(err);
+                                    return;
+                                } else {
+                                    if (!acc) {
+                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                        console.log(err);
+                                        return;
+                                    } else {
+                                        acc.remove();
+                                    }
+                                }
+                            })
+                            user.remove();
                         }
-                    })
-                    user.remove();
-                }
-            });
-            member.remove();
-            res.status(200).json({ "message": "Successfully removed" });
-            return;
+                    }
+                });
+                member.remove();
+                res.status(200).json({ "message": "Successfully removed" });
+                return;
+            }
         }
     });
 }

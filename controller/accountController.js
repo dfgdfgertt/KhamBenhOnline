@@ -1,5 +1,5 @@
 const express = require('express');
-const user = require('../database/table/user');
+const User = require('../database/table/user');
 const Account = require('./../database/table/account');
 const Role = require('./../database/table/role');
 
@@ -26,7 +26,7 @@ const create = async function (req, res) {
     let account = new Account(req.body);
     account.save()
         .then(account => {
-            res.status(200).json({"message": "create successfully"});
+            res.status(200).json(account);
         })
         .catch(err => {
             res.status(400).send({"message":"unable to save to database"});
@@ -93,13 +93,38 @@ const updateById = function (req, res) {
 }
 
 const deleteById = function (req, res) {
-    Account.findByIdAndRemove({_id: req.params.id}, function(err, account){
+    Account.findById({_id: req.params.id}, function(err, account){
         if(err){
-            res.status(400).send({"message":"Data is not found"});
+            res.status(400).send({"message":"Tài khoản không tồn tại."});
             console.log(err);
+            return;
         }
         else{
-            res.status(200).json({"message":"Successfully removed"});
+            if (!account) {
+                res.status(400).send({"message":"Tài khoản không tồn tại."});
+                console.log(err);
+                return;
+            } else {
+                User.findOne({idAccount: account._id}, function (err, user) {
+                    if(err){
+                        res.status(400).send({"message":"không tồn tại thông tin người dùng."});
+                        console.log(err);
+                        return;
+                    }
+                    else{
+                        if (user) {
+                            res.status(400).send({"message":"Không thể xóa tài khoản khi tồn tại thông tin người dùng."});
+                            console.log(err);
+                            return;
+                        } else {
+                            account.remove();
+                            res.status(200).json({"message":"Xóa thành công."});
+                            return;
+                        }
+                    }
+                })
+                
+            }
         }
     });
 }

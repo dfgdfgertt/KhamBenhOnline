@@ -227,27 +227,45 @@ const deleteById = function(req, res) {
             console.log(err);
             return;
         } else {
-            User.findById({ _id: doctor.idUser }, function(err, user) {
-                if (err) {
-                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin" });
-                    console.log(err);
-                    return;
-                } else {
-                    Account.findById({ _id: user.idAccount }, function(err, account){
-                        if (err) {
-                            res.status(400).send({ "message": "Lỗi không tìm thấy thông tin" });
+            if (!doctor) {
+                res.status(400).send({ "message": "Bác sĩ không tồn tại" });
+                console.log(err);
+                return;
+            } else {
+                User.findById({ _id: doctor.idUser }, function(err, user) {
+                    if (err) {
+                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin cá nhân" });
+                        console.log(err);
+                        return;
+                    } else {
+                        if (!user) {
+                            res.status(400).send({ "message": "Lỗi không tìm thấy thông tin cá nhân" });
                             console.log(err);
                             return;
                         } else {
-                            account.remove();
+                            Account.findById({ _id: user.idAccount }, function(err, account){
+                                if (err) {
+                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    console.log(err);
+                                    return;
+                                } else {
+                                    if (!account) {
+                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                        console.log(err);
+                                        return;
+                                    } else {
+                                        account.remove();
+                                    }
+                                }
+                            })
                             user.remove();
-                            doctor.remove();
-                            res.status(200).json({ "message": "Xóa thành công" });
-                            return;
                         }
-                    })
-                }
-            });
+                    }
+                });
+                doctor.remove();
+                res.status(200).json({ "message": "Xóa thành công" });
+                return;
+            }
         }
     });
 }
