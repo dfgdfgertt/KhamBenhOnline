@@ -56,10 +56,10 @@ const createByAdmin = async (req, res) => {
         }
     })
     let account = new Account(req.body);
-    account
-        .save()
+    account.save()
         .then(account=>{
             let user = new User(req.body);
+            user.idAccount = account._id;
             user.save()
                 .then(user => {
                     const member = new Member();
@@ -201,19 +201,31 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Member.findById({ _id: req.params.id }, function(err, member) {
         if (err) {
-            res.status(400).send({ "message": "Data is not found" });
+            res.status(400).send({ "message": "Member is not found" });
             console.log(err);
+            return;
         } else {
             User.findById({ _id: member.idUser }, function(err, user) {
                 if (err) {
-                    res.status(400).send({ "message": "Data is not found" });
+                    res.status(400).send({ "message": "User is not found" });
                     console.log(err);
+                    return;
                 } else {
+                    Account.findById(user.idAccount, function (err, acc) {
+                        if (err) {
+                            res.status(400).send({ "message": "Account is not found" });
+                            console.log(err);
+                            return;
+                        } else {
+                            acc.remove();
+                        }
+                    })
                     user.remove();
                 }
             });
             member.remove();
             res.status(200).json({ "message": "Successfully removed" });
+            return;
         }
     });
 }
