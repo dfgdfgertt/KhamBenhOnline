@@ -102,7 +102,6 @@ const updateByIdByAdmin = function(req, res){
                 user.phoneNumber = req.body.phoneNumber;
                 user.avatar = req.body.avatar
                 user.mail = req.body.mail;
-                //user.idRole = req.body.idRole;
                 Account.findOne({username: req.body.username}, (err , acc)=>{
                     if (err) {
                         res.status(400).send({ "message": "Data is not found" });

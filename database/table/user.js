@@ -16,11 +16,6 @@ var UserSchema = mongoose.Schema({
     mail:{
         type: String
     },
-    idRole:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'role',
-        default: null
-    },
     idAccount:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'account',
