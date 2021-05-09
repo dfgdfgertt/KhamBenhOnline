@@ -11,7 +11,8 @@ var FacultySchema = mongoose.Schema({
         type: String
     },
     price:{
-        type: Number
+        type: Number,
+        default: 100000
     }
 },{
     collection: 'faculty'

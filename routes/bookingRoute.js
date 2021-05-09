@@ -8,19 +8,17 @@ const controller = require('./../controller/bookingController');
 // Defined store route
 router.route('/create').post(controller.create);
 
-// // Defined get data(index or listing) route
-// router.route('/get').get(controller.getAll);
+ // Defined get data(index or listing) route
+ router.route('/get').get(controller.getAll);
 
-// // Defined get route
-// router.route('/get/:id').get(controller.getOneById);
+// Defined get route
+router.route('/get/:id').get(controller.getOneById);
 
-// //  Defined update route
-// router.route('/update/:id').put(controller.updateById);
+//  Defined update route
+router.route('/cancel/:id').put(controller.cancel);
+router.route('/update/:id').put(controller.updateById);
 
-// // Defined delete | remove | destroy route
-// router.route('/delete/:id').delete(controller.deleteById);
-
-// //search diagnostic {"symptom":"value"}
-// router.route('/searchdiagnostic').post(controller.searchDiagnostic);
+// Defined delete | remove | destroy route
+router.route('/delete/:id').delete(controller.deleteById);
 
 module.exports = router;

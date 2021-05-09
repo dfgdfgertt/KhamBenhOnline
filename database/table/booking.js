@@ -16,6 +16,10 @@ var BookingScheme = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'member',
     },
+    idOrder:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'order'
+    },
     customer:{
         type: String
     },
@@ -30,6 +34,10 @@ var BookingScheme = mongoose.Schema({
     },
     time:{
         type: Date
+    },
+    status:{
+        type: Boolean,
+        default: true
     }
 },{
     collection: 'booking'

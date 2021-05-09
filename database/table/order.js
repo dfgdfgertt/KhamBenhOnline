@@ -5,8 +5,7 @@ var OderSchema = mongoose.Schema({
         ref: 'booking'
     },
     price: {
-        type: Number,
-        default: 100000
+        type: Number
     },
     status:{
         type: Boolean,

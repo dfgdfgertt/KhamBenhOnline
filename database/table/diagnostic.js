@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var DiagnosticScheme = mongoose.Schema({
     name:{
         type: String,
-        default: 'no name'
+        default: 'Chưa chuẩn đoán'
     },
     description:{
         type: String
