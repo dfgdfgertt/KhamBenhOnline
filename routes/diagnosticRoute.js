@@ -6,7 +6,7 @@ const controller = require('./../controller/diagnosticController');
 //link: http://localhost:9000/api/diagnostic/
 
 // Defined store route
-//router.route('/create').post(controller.createsymptom);
+router.route('/create').post(controller.createsymptom);
 
 // Defined get data(index or listing) route
 router.route('/get').get(controller.getAll);
