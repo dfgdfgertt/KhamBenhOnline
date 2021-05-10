@@ -8,7 +8,7 @@ function delay(time) {
 
 let transactions;
 const arr = async function () {
-    const arr = await readXlsxFile('./fp-growth/symptom-13.xlsx').then((rows) => {
+    const arr = await readXlsxFile('./fp-growth/symptom-18.xlsx').then((rows) => {
         return rows.filter(row => row.filter(column => column != null).length > 0);
      });
      arr.forEach(element => {
@@ -34,6 +34,9 @@ fpgrowth.on('data', function (itemset) {
     support = itemset.support;
     items = itemset.items;
     if (items.length>3) {
+        Diagnostic.find({symptom: {$in: items}}, function(err, diag){
+            return;
+        });
         let diagnostic =  new Diagnostic();
         diagnostic.symptom = items;
         diagnostic.save().then( e =>{

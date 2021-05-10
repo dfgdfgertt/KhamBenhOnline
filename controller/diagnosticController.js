@@ -12,24 +12,35 @@ function delay(time) {
 
 const createsymptom = async function (req, res) {
     await Growth.exe();
-    await delay(10000);
-    Diagnostic.find((err, diagnostics)=>{
-        if (err) {
-            res.status(400).send({"message":"unable to save to database"});
-            console.log(err);
-        }else{
-            let symptom = new Symptom();
-            diagnostics.forEach(element => {
-                symptom.symptom.push(element.symptom);
-            });
-            symptom.save().then(symp=>{
-                res.status(200).json({"message":"Execute successfully"});
-            }).catch(err =>{
-                res.status(400).send({"message":"unable to save to database"});
-                console.log(err);
-            })
-        }
-    })
+    res.status(200).json({"message":"Thực thi thành công."});
+    return;
+    // await delay(5000);
+    // Diagnostic.find((err, diagnostics)=>{
+    //     if (err) {
+    //         res.status(400).send({"message":"Thực thi không thành công."});
+    //         console.log(err);
+    //         return;
+    //     }else{
+    //         Symptom.findOne(function (err, symptom) {
+    //             if (err) {
+    //                 res.status(400).send({"message":"Thực thi không thành công."});
+    //                 console.log(err);
+    //                 return;
+    //             }else{
+    //                 symptom.symptom = diagnostics;
+    //                 symptom.save().then(symp=>{
+    //                     res.status(200).json({"message":"Thực thi thành công."});
+    //                     return;
+    //                 }).catch(err =>{
+    //                     res.status(400).send({"message":"Thực thi không thành công."});
+    //                     console.log(err);
+    //                     return;
+    //                 })
+    //             }
+    //         })
+           
+    //     }
+    // })
 }
 
 const getAll = function (req, res) {
@@ -101,6 +112,8 @@ const deleteById = function (req, res) {
 }
 
 const searchDiagnostic = function (req, res) {
+    // console.log(req.body.symptom.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D'));
+    // return
     const classifier = new Classifier();
     Diagnostic.find(function(err , diagnostics){
         diagnostics.forEach(diagnostic => {
@@ -122,12 +135,14 @@ const searchDiagnostic = function (req, res) {
                             })
                         }
                         res.status(200).json(diagnostic);
+                        return;
                     }
                 }).populate('idFaculty');
             })
         } else {
             res.status(200).json({"message":"Hãy nhập rõ hơn triệu chứng của bạn!"});
             console.log(err);
+            return;
         }
     }).populate('idFaculty');
 };

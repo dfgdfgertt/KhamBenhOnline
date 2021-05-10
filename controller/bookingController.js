@@ -7,6 +7,7 @@ const Member = require('./../database/table/member');
 const Order = require('./../database/table/order');
 
 const create = function(req, res) {
+    return
     var date =  new Date();
     console.log(date);
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
