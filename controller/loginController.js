@@ -10,29 +10,8 @@ function delay(time) {
   }
 
 const admin = function (res){
-    newjson1 = [{"admin": "Tao là admin ý kiến cc :D"}];
-    newjson = [
-        {
-            "_id": "admin",
-            "fullname": "admin",
-            "avatar": "admin",
-            "address": "admin",
-            "phoneNumber": "admin",
-            "mail": "admin",
-            "nickname": "admin",
-            "image": "admin",
-            "trainingPlaces": "admin",
-            "degree": "admin",
-            "description": "admin",
-            "specialist": "admin",
-            "workingProcess": "admin",
-            "Faculty": "admin",
-            "Role": "admin",
-            "idAccount": "admin",
-            "listDiagnostic": "admin"
-        }
-    ];
-    res.status(200).json(newjson1);
+    res.status(200).json( {"admin": "Tui là admin :D"});
+    return
 }
 
 const doctorlogin = function (idAccount , res){
