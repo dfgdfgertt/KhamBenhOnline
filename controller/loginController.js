@@ -39,68 +39,56 @@ const doctorlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send({"message":"Login is unsuccessfully"});
+            res.status(400).send({"message":"Đăng nhập không thành công."});
+            return;
         }else{
             Doctor.findOne({idUser:user._id },function(err, doctor){
                 if (err) {
                     console.log(err);
-                    res.status(400).send({"message":"Login is unsuccessfully"});
+                    res.status(400).send({"message":"Đăng nhập không thành công."});
+                    return;
                 }else {
-                    newjson = [
-                        {
-                            "_id": doctor._id,
-                            "fullname": user.fullname,
-                            "avatar": user.avatar,
-                            "address": user.address,
-                            "phoneNumber": user.phoneNumber,
-                            "mail": user.mail,
-                            "nickname": doctor.name,
-                            "image": doctor.image,
-                            "trainingPlaces": doctor.trainingPlaces,
-                            "degree": doctor.degree,
-                            "description": doctor.description,
-                            "specialist": doctor.specialist,
-                            "workingProcess": doctor.workingProcess,
-                            "Faculty": doctor.idFaculty,
-                            "Role": user.idRole.name,
-                            "idAccount": user.idAccount,
-                            "listDiagnostic": doctor.listDiagnostic
-                        }
-                    ];
-                    res.status(200).json(newjson);
+                    if (!doctor) {
+                        console.log(err);
+                        res.status(400).send({"message":"Đăng nhập không thành công."});
+                        return;
+                    } else {
+                        res.status(200).json(doctor);
+                        return;
+                    }
                 }
-            }).populate('idFaculty').populate('listDiagnostic');
+            })
+            .populate('idFaculty')
+            .populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
         }
-    }).populate('idAccount').populate('idRole');
+    });
 }
 
 const memberlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send({"message":"Login is unsuccessfully"});
+            res.status(400).send({"message":"Đăng nhập không thành công."});
+            return;
         }else{
         Member.findOne({idUser:user._id} , function(err, member){
             if (err) {
                 console.log(err);
-                res.status(400).send({"message":"Login is unsuccessfully"});
+                res.status(400).send({"message":"Đăng nhập không thành công."});
+                return;
             }else{
-                json =
-                {
-                    "_id": member._id,
-                    "fullname": user.fullname,
-                    "avatar": user.avatar,
-                    "address": user.address,
-                    "phoneNumber": user.phoneNumber,
-                    "mail": user.mail,
-                    "Role": user.idRole.name,
-                    "idAccount": user.idAccount
-                };
-                res.status(200).json(json);
+                if (!member) {
+                    console.log(err);
+                    res.status(400).send({"message":"Đăng nhập không thành công."});
+                    return;
+                } else {
+                    res.status(200).json(member);
+                    return;
+                }
             };
-        });
+        }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
     };
-    }).populate('idRole').populate('idAccount');
+    });
 }
 
 const login = async function (req, res){
