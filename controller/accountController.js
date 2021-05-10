@@ -127,6 +127,7 @@ const getOneById = function (req, res) {
 }
 
 const updateById = function (req, res) {
+    console.log(req.body);
     Account.findById(req.params.id, function(err, account) {
         if (!account){
             res.status(400).send({"message":"Sai định dạng Id-Account."});
