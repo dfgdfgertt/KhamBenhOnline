@@ -8,6 +8,7 @@ const Account = require('./../controller/accountController');
 
 // Defined store route
 router.route('/create').post(Account.create);
+router.route('/admin/create').post(Account.createByAdmin);
 
 // Defined get data(index or listing) route
 router.route('/get').get(Account.getAll);

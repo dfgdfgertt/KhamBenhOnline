@@ -68,6 +68,39 @@ const create = async function (req, res) {
     }
 }
 
+
+const createByAdmin = async function (req, res) {
+    if (!req.body.username){ 
+        res.status(400).send({"message":"Username is require"});
+        return;
+    }else if (!req.body.password){
+        res.status(400).send({"message":"Password is require"});
+        return;
+    }
+    await Account.findOne({username: req.body.username}, async function(err, account) {
+        if (err) {
+              console.loh(err);
+        }
+        else{
+            if (account){
+                res.status(400).send({"message":"Username already exists"});
+                return;
+            }
+        }
+        }
+    )
+    let account = new Account(req.body);
+    account.save()
+        .then(account => {
+            res.status(200).json({"message": "create successfully"});
+        })
+        .catch(err => {
+            res.status(400).send({"message":"unable to save to database"});
+            console.log(err);
+        });
+}
+
+
 const getAll = function (req, res) {
     Account.find(function(err, accounts){
         if(err){
@@ -167,5 +200,6 @@ module.exports = {
     getAll,
     getOneById,
     updateById,
-    deleteById
+    deleteById,
+    createByAdmin
 };
