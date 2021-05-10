@@ -42,7 +42,7 @@ const doctorlogin = function (idAccount , res){
             res.status(400).send({"message":"Đăng nhập không thành công."});
             return;
         }else{
-            Doctor.findOne({idUser:user._id },function(err, doctor){
+            Doctor.findOne({idUser: user._id },function(err, doctor){
                 if (err) {
                     console.log(err);
                     res.status(400).send({"message":"Đăng nhập không thành công."});
@@ -68,18 +68,18 @@ const memberlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send({"message":"Đăng nhập không thành công."});
+            res.status(400).send({"message":"Đăng nhập không thành công3."});
             return;
         }else{
         Member.findOne({idUser:user._id} , function(err, member){
             if (err) {
                 console.log(err);
-                res.status(400).send({"message":"Đăng nhập không thành công."});
+                res.status(400).send({"message":"Đăng nhập không thành công2."});
                 return;
             }else{
                 if (!member) {
                     console.log(err);
-                    res.status(400).send({"message":"Đăng nhập không thành công."});
+                    res.status(400).send({"message":"Đăng nhập không thành công.1"});
                     return;
                 } else {
                     res.status(200).json(member);
@@ -94,15 +94,17 @@ const memberlogin = function (idAccount , res){
 const login = async function (req, res){
     await Account.findOne({username: req.body.username}, async function(err, account) {
         if (err) {
-              console.loh(err);
+            res.status(400).send({"message":"Sai thông tin đăng nhập."});
+            console.log(err);
+            return;
         }
         else{
             if (!account){
-                res.status(400).send({"message":"The account is not registered"});
+                res.status(400).send({"message":"Sai thông tin đăng nhập."});
                 return;
             }else{
                 if (account.password != req.body.password) {
-                    res.status(400).send({"message":"Password is not correct"});
+                    res.status(400).send({"message":"Sai thông tin đăng nhập."});
                 return;
                 }else{
                     switch (account.idRole.name) {
@@ -127,7 +129,7 @@ const login = async function (req, res){
                             memberlogin(account._id, res);
                             break;
                         default:
-                            res.status(400).send({"message":"Login is unsuccessfully"});
+                            res.status(400).send({"message":"Không tồn tại chức vụ trong hệ thống"});
                             break;
                     }
                 }
