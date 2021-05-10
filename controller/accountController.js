@@ -129,31 +129,29 @@ const getOneById = function (req, res) {
 const updateById = function (req, res) {
     Account.findById(req.params.id, function(err, account) {
         if (!account){
-            res.status(400).send({"message":"Data is not found"});
+            res.status(400).send({"message":"Sai định dạng Id-Account."});
             console.log(err);
         }
         else {
-            if (!req.body.userName ){ 
-                res.status(400).send({"message":"User name is require"});
+            if (!account) {
+                res.status(400).send({"message":"Tài khoản không tồn tại."});
                 return;
-            }else if (!req.body.password){
-                res.status(400).send({"message":"Password is require"});
-                return;
+            } else {
+                account.username = req.body.username;
+                account.password = req.body.password;
+                account.idRole = req.body.idRole;
+                account
+                    .save()
+                    .then(business => {
+                        res.status(200).json({"message":"Sửa thành công."});
+                        return;
+                    })
+                    .catch(err => {
+                        res.status(400).send({"message":"Sửa không thành công."});
+                        console.log(err);
+                        return;
+                    });
             }
-            let role = Role.findById(req.body.idRole);
-            if (!role){
-                res.status(400).send({"message":"Role not found"});
-                return;
-            }
-            account.username = req.body.username;
-            account.password = req.body.password;
-            account.save().then(business => {
-                res.status(200).json({"message":"Update complete"});
-            })
-                .catch(err => {
-                    res.status(400).send({"message":"unable to update the database"});
-                    console.log(err);
-                });
         }
     });
 }
