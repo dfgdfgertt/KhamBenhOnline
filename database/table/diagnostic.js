@@ -9,7 +9,8 @@ var DiagnosticScheme = mongoose.Schema({
     },
     idFaculty: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'faculty'
+        ref: 'faculty',
+        default: null
     },
     symptom:{
         type: Array
