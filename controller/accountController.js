@@ -137,6 +137,13 @@ const updateById = function (req, res) {
                 res.status(400).send({"message":"Tài khoản không tồn tại."});
                 return;
             } else {
+                if (!req.body.username) {
+                    res.status(400).send({"message":"Không thể bỏ trống tài khoản."});
+                    return;
+                } else if (!req.body.password) {
+                    res.status(400).send({"message":"Không thể bỏ trống mật khẩu."});
+                    return;
+                }
                 account.username = req.body.username;
                 account.password = req.body.password;
                 account.idRole = req.body.idRole;
