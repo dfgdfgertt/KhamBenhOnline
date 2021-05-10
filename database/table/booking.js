@@ -8,7 +8,7 @@ var BookingScheme = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'doctor',
     },
-    idFuculty: {
+    idFaculty: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'faculty',
     },
@@ -30,10 +30,10 @@ var BookingScheme = mongoose.Schema({
         type: String
     },
     day:{
-        type: Date
+        type: String
     },
     time:{
-        type: Date
+        type: String
     },
     status:{
         type: Boolean,

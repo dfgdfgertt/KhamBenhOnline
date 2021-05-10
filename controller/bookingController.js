@@ -6,15 +6,52 @@ const Booking = require('./../database/table/booking');
 const Member = require('./../database/table/member');
 const Order = require('./../database/table/order');
 
-const create = async function(req, res) {
+const create = function(req, res) {
+    var date =  new Date();
+    console.log(date);
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
         res.status(400).send({ "message": "Điều kiện còn thiếu." });
         return;
     }
-    const booking = new Booking(req.body);
-    const order = new Order();
-    order.idBooking = booking._id;
-    await Faculty.findById(req.body.idFaculty, function (err, faculty) {
+    if (!req.body.day) {
+        res.status(400).send({ "message": "Xin vui lòng chọn ngày đặt khám." });
+        return;
+    }
+    if (!req.body.time) {
+        res.status(400).send({ "message": "Xin vui lòng chọn thời gian đặt khám." });
+        return;
+    }
+    let booking = new Booking(req.body);
+    let order = new Order();
+    Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty }]}, function (err, bookings) {
+        if (err) {
+            res.status(400).send({ "message": "Sai định dạng ngày." });
+            console.log(err)
+            return;
+        } else {
+            if (bookings.length >= 24) {
+                res.status(400).send({ "message": "Hôm nay đã đầy lịch khám. Xin vui lòng đặt khám vào các ngày tiếp theo." });
+                console.log(err)
+                return;
+            } 
+            else if (bookings.length > 0) {
+                Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty, time: req.body.time }]}, function (err, bookingss) {
+                    if (err) {
+                        res.status(400).send({ "message": "Sai định dạng thời gian." });
+                        console.log(err)
+                        return;
+                    } else {
+                        if (bookingss.length >= 3) {
+                            res.status(400).send({ "message": "Thời gian này đã đầy lịch khám. Xin vui lòng đặt khám vào các giờ khác." });
+                            console.log(err)
+                            return;
+                        } 
+                    }
+                })
+            }
+        }
+    })
+    Faculty.findById(req.body.idFaculty, function (err, faculty) {
         if (err) {
             res.status(400).send({ "message": "Sai định dạng của Id-Khoa." });
             return;
@@ -23,41 +60,44 @@ const create = async function(req, res) {
                 res.status(400).send({ "message": "Khoa không tồn tại." });
             return;
             } else {
+                order.idBooking = booking._id;
                 order.price = faculty.price;
+                order.save()
+                .then(oder =>{
+                    booking.idOrder = oder._id
+                    booking.save().then(booking => {
+                        res.status(200).json({ "message": "Đặt khám thành công." });
+                        return;
+                    }).catch( err =>{
+                        res.status(400).send({ "message": "Đặt khám không thành công." });
+                        console.log(err);
+                        return;
+                    })
+                }).catch( err =>{
+                    res.status(400).send({ "message": "Đặt khám không thành công." });
+                    console.log(err);
+                    return;
+                })
             }
         }
     })
-    order.save().then(oder =>{
-        booking.idOrder = oder._id
-        booking.save().then(booking => {
-            res.status(200).json({ "message": "Hẹn thành công." });
-            return;
-        }).catch( err =>{
-            res.status(400).send({ "message": "Hẹn không thành công." });
-            console.log(err);
-            return;
-        })
-    }).catch( err =>{
-        res.status(400).send({ "message": "Hẹn không thành công." });
-        console.log(err);
-        return;
-    })
+    
 }
 
 const getAll = function (req, res){
     Booking.find( function (err, bookings) {
         if (err) {
-            res.status(400).send({ "message": "không thể lấy danh sách lịch hẹn." });
+            res.status(400).send({ "message": "không thể lấy danh sách lịch đặt khám." });
             console.log(err);
         } else {
             res.status(200).json(bookings);
         }
     })
     .populate('idDiagnostic')
-    .populate('idDoctor')
-    .populate('idFuculty')
-    .populate('idMember')
+    .populate('idFaculty')
     .populate('idOrder')
+    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 const getOneById = function (req, res){
@@ -68,7 +108,7 @@ const getOneById = function (req, res){
             return;
         } else {
             if (!booking) {
-                res.status(400).send({ "message": "Lịch hẹn không tồn tại." });
+                res.status(400).send({ "message": "Lịch khám không tồn tại." });
                 console.log(err);
                 return;
             } else {
@@ -78,10 +118,10 @@ const getOneById = function (req, res){
         }
     })
     .populate('idDiagnostic')
-    .populate('idDoctor')
-    .populate('idFuculty')
-    .populate('idMember')
+    .populate('idFaculty')
     .populate('idOrder')
+    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 const cancel = function (req, res) {
@@ -91,7 +131,7 @@ const cancel = function (req, res) {
             console.log(err);
         } else {
             if (!booking) {
-                res.status(400).send({ "message": "Lịch hẹn không tồn tại." });
+                res.status(400).send({ "message": "Lịch khám không tồn tại." });
                 console.log(err);
                 return;
             } else {
@@ -99,11 +139,11 @@ const cancel = function (req, res) {
                 booking
                     .save()
                     .then(booking =>{
-                        res.status(200).json({ "message": "Hủy lịch hẹn thành công." });
+                        res.status(200).json({ "message": "Hủy hẹn khám thành công." });
                         return;
                     })
                     .catch(err =>{
-                        res.status(400).send({ "message": "Hủy lịch hẹn không thành công." });
+                        res.status(400).send({ "message": "Hủy hẹn khám không thành công." });
                         console.log(err);
                         return;
                     })
@@ -111,10 +151,10 @@ const cancel = function (req, res) {
         }
     })
     .populate('idDiagnostic')
-    .populate('idDoctor')
-    .populate('idFuculty')
-    .populate('idMember')
+    .populate('idFaculty')
     .populate('idOrder')
+    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 
@@ -125,7 +165,7 @@ const updateById = function (req, res) {
             console.log(err);
         } else {
             if (!booking) {
-                res.status(400).send({ "message": "Lịch hẹn không tồn tại." });
+                res.status(400).send({ "message": "Lịch khám không tồn tại." });
                 console.log(err);
                 return;
             } else {
@@ -135,11 +175,11 @@ const updateById = function (req, res) {
                 booking
                     .save()
                     .then(booking =>{
-                        res.status(200).json({ "message": "Hủy lịch hẹn thành công." });
+                        res.status(200).json({ "message": "Thay đổi lịch khám thành công." });
                         return;
                     })
                     .catch(err =>{
-                        res.status(400).send({ "message": "Hủy lịch hẹn không thành công." });
+                        res.status(400).send({ "message": "Thay đổi lịch khám không thành công." });
                         console.log(err);
                         return;
                     })
@@ -147,10 +187,10 @@ const updateById = function (req, res) {
         }
     })
     .populate('idDiagnostic')
-    .populate('idDoctor')
-    .populate('idFuculty')
-    .populate('idMember')
+    .populate('idFaculty')
     .populate('idOrder')
+    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 const deleteById = function (req, res) {
