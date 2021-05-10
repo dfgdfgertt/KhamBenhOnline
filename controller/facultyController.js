@@ -1,6 +1,8 @@
 const express = require('express');
 const Khoa = require('./../database/table/faculty');
-const UploadImage = require('./upload');
+const Doctor = require('./../database/table/doctor');
+const Diagnostic = require('./../database/table/diagnostic');
+const Booking = require('./../database/table/booking');
 
 const create = async function (req, res) {
     if (!req.body.name){ 
@@ -82,12 +84,65 @@ const updateById = function (req, res) {
 }
 
 const deleteById = function (req, res) {
-    Khoa.findByIdAndRemove({_id: req.params.id}, function(err, person){
+    Khoa.findById({_id: req.params.id}, function(err, faculty){
         if(err){
-            res.status(400).json({"message":"Data is not found"});
+            res.status(400).json({"message":"Sai định dạng Id-Faculty."});
             console.log(err);
+            return;
         } 
-        else res.status(200).json({"message":"Successfully removed"});
+        else {
+            if (!faculty) {
+                res.status(400).json({"message":"Khoa không tồn tại."});
+                console.log(err);
+                return;
+            } else {
+                Doctor.findOne({idFaculty: faculty._id},function (err, doc) {
+                    if (err) {
+                        res.status(400).json({"message":"Sai định dạng Id-Faculty."});
+                        console.log(err);
+                        return;
+                    } else {
+                        if (doc) {
+                            res.status(400).json({"message":"Không thể xóa khi tồn tại bác sĩ thuộc " + faculty.name});
+                            console.log(err);
+                            return;
+                        } else{
+                            Booking.findOne({idFaculty: faculty._id},function (err, booking) {
+                                if (err) {
+                                    res.status(400).json({"message":"Sai định dạng Id-Faculty."});
+                                    console.log(err);
+                                    return;
+                                } else {
+                                    if (booking) {
+                                        res.status(400).json({"message":"Không thể xóa khi tồn tại lịch hẹn thuộc " + faculty.name});
+                                        console.log(err);
+                                        return;
+                                    } else{
+                                        Diagnostic.findOne({idFaculty: faculty._id},function (err, diagnostic) {
+                                            if (err) {
+                                                res.status(400).json({"message":"Sai định dạng Id-Faculty."});
+                                                console.log(err);
+                                                return;
+                                            } else {
+                                                if (diagnostic) {
+                                                    res.status(400).json({"message":"Không thể xóa khi tồn tại chuẩn đoán thuộc " + faculty.name});
+                                                    console.log(err);
+                                                    return;
+                                                } else{
+                                                    //faculty.remove();
+                                                    res.status(200).json({"message":"Xóa thành công"});
+                                                    return;
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
     });
 }
 

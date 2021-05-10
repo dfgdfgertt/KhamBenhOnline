@@ -10,8 +10,8 @@ function delay(time) {
   }
 
 const admin = function (res){
-    res.status(200).json( {"admin": "Tui là admin :D"});
-    return
+    res.status(200).json({"admin": "Tui là admin :D"});
+    return;
 }
 
 const doctorlogin = function (idAccount , res){
