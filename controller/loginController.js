@@ -5,9 +5,6 @@ const User = require('./../database/table/user');
 const Member = require('./../database/table/member');
 const Doctor = require('./../database/table/doctor');
 
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
 
 const admin = function (res){
     res.status(200).json({"admin": "Tui là admin :D"});
@@ -47,18 +44,18 @@ const memberlogin = function (idAccount , res){
     User.findOne({idAccount:idAccount }, function(err, user){
         if (err) {
             console.log(err);
-            res.status(400).send({"message":"Đăng nhập không thành công3."});
+            res.status(400).send({"message":"Đăng nhập không thành công."});
             return;
         }else{
         Member.findOne({idUser:user._id} , function(err, member){
             if (err) {
                 console.log(err);
-                res.status(400).send({"message":"Đăng nhập không thành công2."});
+                res.status(400).send({"message":"Đăng nhập không thành công."});
                 return;
             }else{
                 if (!member) {
                     console.log(err);
-                    res.status(400).send({"message":"Đăng nhập không thành công.1"});
+                    res.status(400).send({"message":"Đăng nhập không thành công."});
                     return;
                 } else {
                     res.status(200).json(member);
@@ -115,6 +112,93 @@ const login = async function (req, res){
             }
         }
     }).populate('idRole');
+}
+
+const loginGGAccount = function (req, res) {
+    if (!req.body.googleId) {
+        res.status(400).send({"message":"Thiếu google-Id"});
+        console.log(err);
+        return;
+    }
+    if (!req.body.fullname) {
+        res.status(400).send({"message":"Thiếu tên người dùng"});
+        console.log(err);
+        return;
+    }
+    Account.findOne({username: req.body.googleId}, function (err, account) {
+        if (err) {
+            res.status(400).send({"message":"Có lỗi trong lúc đăng nhập"});
+            console.log(err);
+            return;
+        } else {
+            if (account) {
+                memberlogin(account._id, res);
+            } else {
+                let acc = new Account();
+                if (!req.body.idRole) {
+                    Role.findOne({name: 'Thành viên'}, function (err, role) {
+                       if (err) {
+                            res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                            return;
+                       } else {
+                           if (!role) {
+                                res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                                return;
+                           } else {
+                                acc.username = req.body.googleId;
+                                acc.password = req.body.googleId;
+                                acc.idRole = role._id;
+                                acc.save()
+                                .then(acc => {
+                                    let user = new User(req.body);
+                                    user.idAccount = acc._id;
+                                    user.save()
+                                        .then(user =>{
+                                            let member = new Member();
+                                            member.idUser = user._id;
+                                            member.save()
+                                                .then(member =>{
+                                                    Member.findOne({idUser:user._id} , function(err, member){
+                                                        if (err) {
+                                                            console.log(err);
+                                                            res.status(400).send({"message":"Đăng nhập không thành công."});
+                                                            return;
+                                                        } else {
+                                                            if (!member) {
+                                                                console.log(err);
+                                                                res.status(400).send({"message":"Đăng nhập không thành công."});
+                                                                return;
+                                                            } else {
+                                                                res.status(200).json(member);
+                                                                return;
+                                                            }
+                                                        }
+                                                    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
+                                                })
+                                                .catch(err => {
+                                                    res.status(400).send({"message":"unable to save to database"});
+                                                    console.log(err);
+                                                    return;
+                                                });
+                                        })
+                                        .catch(err => {
+                                            res.status(400).send({"message":"unable to save to database"});
+                                            console.log(err);
+                                            return;
+                                        });
+                                })
+                                .catch(err => {
+                                    res.status(400).send({"message":"unable to save to database"});
+                                    console.log(err);
+                                    return;
+                                });
+                           }
+                       }
+                    })
+                }
+            }
+        }
+    })
 }
 
 
@@ -214,6 +298,7 @@ module.exports = {
     login,
     changePassword,
     forgotpassword,
-    changepasswordforgot
+    changepasswordforgot,
+    loginGGAccount
 };
 

@@ -7,6 +7,7 @@ const controller = require('./../controller/loginController');
 
 // Defined store route
 router.route('/log').post(controller.login);
+router.route('/gg').post(controller.loginGGAccount);
 
 router.route('/changepassword/:id').post(controller.changePassword);
 
