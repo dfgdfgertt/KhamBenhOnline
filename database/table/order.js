@@ -10,6 +10,10 @@ var OderSchema = mongoose.Schema({
     status:{
         type: Boolean,
         default: false
+    },
+    idPayment:{
+        type: String,
+        default: null
     }
 },{
     collection: 'order'

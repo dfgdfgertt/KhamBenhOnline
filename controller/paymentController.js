@@ -3,9 +3,41 @@ const config = require('config');
 const dateFormat = require('dateformat');
 const querystring = require('qs');
 const sha256 = require('sha256');
+const Order = require('./../database/table/order');
 
 
-const create_payment_url =  function (req, res, next){
+const create_payment_url = async  function (req, res, next){
+    var orderId = dateFormat(date, 'HHmmss');
+    if (!req.body.idOrder) {
+        res.status(400).send({"message": "Thiếu Id-Order."});
+        return;
+    }
+    await Order.findById(req.body.idOrder, function(err, o){
+        if (err) {
+            res.status(400).send({"message": "Sai định dạng Id-Order."});
+            return;
+        } else {
+            if (!o) {
+                res.status(400).send({"message": "Hóa đơn không tồn tại."});
+                return;
+            }else{
+                if (o.status) {
+                    res.status(400).send({"message": "Hóa đơn này đã được thanh toán."});
+                    return;
+                }
+                if (!o.idBooking.status) {
+                    res.status(400).send({"message": "Lịch hẹn này đã bị hủy."});
+                    return;
+                }
+                o.idPayment = orderId;
+                o.save()
+                .catch(err =>{
+                    res.status(400).send({"message": "Không thể tạo hóa đơn thanh toán."});
+                    return;
+                })
+            }  
+        }
+    }).populate('idBooking');
     var ipAddr = req.headers['x-forwarded-for'] ||
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
@@ -19,7 +51,7 @@ const create_payment_url =  function (req, res, next){
     var date = new Date();
 
     var createDate = dateFormat(date, 'yyyymmddHHmmss');
-    var orderId = dateFormat(date, 'HHmmss');
+   
     var amount = req.body.amount;
     var bankCode = req.body.bankCode;
     
@@ -80,11 +112,20 @@ const vnpay_ipn =  function (req, res, next){
     if(secureHash === checkSum){
         var orderId = vnp_Params['vnp_TxnRef'];
         var rspCode = vnp_Params['vnp_ResponseCode'];
+        Order.findOneAndUpdate({idPayment: orderId},  {
+            $set:{
+                status: true
+            }
+        }).catch (e =>{
+            console.log(e);
+        })
         //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
-        res.status(200).json({RspCode: '00', Message: 'success'})
+        //res.status(200).json({RspCode: '00', Message: 'success'})
+        res.redirect('http://localhost:4000/home?thanhcongne')
     }
     else {
-        res.status(400).json({RspCode: '97', Message: 'Fail checksum'})
+        //res.status(400).json({RspCode: '97', Message: 'Fail checksum'})
+        res.redirect('http://localhost:4000/home?thatbaine')
     }
 }
 

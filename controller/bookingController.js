@@ -1,14 +1,9 @@
 const express = require('express');
-const Diagnostic = require('./../database/table/diagnostic');
-const Symptom = require('./../database/table/symptom');
 const Faculty = require('./../database/table/faculty');
 const Booking = require('./../database/table/booking');
-const Member = require('./../database/table/member');
 const Order = require('./../database/table/order');
 
 const create = function(req, res) {
-    return
-    var date =  new Date();
     console.log(date);
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
         res.status(400).send({ "message": "Điều kiện còn thiếu." });
