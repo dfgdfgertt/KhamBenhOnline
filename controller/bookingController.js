@@ -4,7 +4,6 @@ const Booking = require('./../database/table/booking');
 const Order = require('./../database/table/order');
 
 const create = function(req, res) {
-    console.log(date);
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
         res.status(400).send({ "message": "Điều kiện còn thiếu." });
         return;
