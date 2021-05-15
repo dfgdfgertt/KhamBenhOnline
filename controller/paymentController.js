@@ -4,6 +4,8 @@ const dateFormat = require('dateformat');
 const querystring = require('qs');
 const sha256 = require('sha256');
 const Order = require('./../database/table/order');
+const Booking = require('./../database/table/booking');
+const SendMailPayment = require('./emailController');
 
 
 const create_payment_url = async  function (req, res, next){
@@ -118,6 +120,12 @@ const vnpay_ipn =  function (req, res, next){
             }
         }).catch (e =>{
             console.log(e);
+        }).then(o =>{
+            Booking.findById(o.idBooking, function(err , book){
+                if (book.mail) {
+                    SendMailPayment.sendMailPayment(book)
+                }
+            }).populate('idOrder')
         })
         //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
         //res.status(200).json({RspCode: '00', Message: 'success'})

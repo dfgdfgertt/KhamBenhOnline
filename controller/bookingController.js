@@ -16,6 +16,10 @@ const create = function(req, res) {
         res.status(400).send({ "message": "Xin vui lòng chọn thời gian đặt khám." });
         return;
     }
+    if (!req.body.mail) {
+        res.status(400).send({ "message": "Xin vui lòng nhập địa chỉ Email." });
+        return;
+    }
     let booking = new Booking(req.body);
     let order = new Order();
     Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty }]}, function (err, bookings) {
