@@ -1,24 +1,24 @@
 var mongoose = require('mongoose');
 var BookingScheme = mongoose.Schema({
-    idDiagnostic: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'diagnostic',
-    },
     idDoctor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'doctor',
+        default: null
     },
     idFaculty: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'faculty',
+        default: null
     },
     idMember: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'member',
+        default: null
     },
     idOrder:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'order'
+        ref: 'order',
+        default: null
     },
     customer:{
         type: String
