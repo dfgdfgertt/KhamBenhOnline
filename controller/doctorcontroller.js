@@ -178,6 +178,7 @@ const getByFaculty = function(req, res) {
             res.status(200).json(doctors);
         }
     }).populate('idFaculty')
+    .populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
 }
 
 
