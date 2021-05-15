@@ -169,7 +169,7 @@ const getAll = function(req, res) {
 }
 
 const getByFaculty = function(req, res) {
-    Doctor.find({ idFaculty: req.body.idFaculty }, (err, doctors) => {
+    Doctor.find({ idFaculty: req.params.id }, (err, doctors) => {
         if (err) {
             res.status(400).send({ "message": "fail to get" });
             console.log(err);
