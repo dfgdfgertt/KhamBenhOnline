@@ -6,7 +6,7 @@ const sendMailPayment = (book)=>{
         service: 'gmail',
         auth: {
            user: 'thienhoach14141@gmail.com',
-           pass: 'bidaica1'
+           pass: 'bidaica1@'
         }
     });
     
