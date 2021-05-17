@@ -68,7 +68,7 @@ const create = function(req, res) {
                     booking.idOrder = oder._id
                     booking.save().then(booking => {
                         //res.status(200).json({ "message": "Đặt khám thành công." });
-                        if (!idMember){
+                        if (idMember){
                             Member.findByIdAndUpdate(idMember, (err, member)=>{
                                 if (err) {
                                     res.status(400).send({ "message": "Sai định dạng của Id-Member." });
