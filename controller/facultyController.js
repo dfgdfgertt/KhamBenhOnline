@@ -71,6 +71,7 @@ const updateById = function (req, res) {
             // }
             khoa.logo = req.body.logo;
             khoa.name = req.body.name;
+            khoa.price = req.body.price;
             khoa.description = req.body.description;
             khoa.save().then(business => {
                 res.status(200).json({"message":"Update complete"});
