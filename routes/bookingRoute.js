@@ -14,6 +14,8 @@ router.route('/create').post(controller.create);
 // Defined get route
 router.route('/get/:id').get(controller.getOneById);
 router.route('/member/get/:id').get(controller.getBookingByIdMember);
+router.route('/doctor/get/:id').get(controller.getBookingByIdDoctor);
+router.route('/faculty/get/:id').get(controller.getBookingByIdFaculty);
 
 //  Defined update route
 router.route('/cancel/:id').put(controller.cancel);
