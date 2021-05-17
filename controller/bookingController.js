@@ -68,19 +68,21 @@ const create = function(req, res) {
                     booking.idOrder = oder._id
                     booking.save().then(booking => {
                         //res.status(200).json({ "message": "Đặt khám thành công." });
-                        if (idMember){
-                            Member.findOne(idMember, (err, member)=>{
+                        if (req.body.idMember){
+                            Member.findOne({_id:req.body.idMember}, function(err, m){
                                 if (err) {
                                     res.status(400).send({ "message": "Sai định dạng của Id-Member." });
+                                    console.log(err);
                                     return;
                                 } else {
-                                    if (!member) {
+                                    if (!m) {
                                         res.status(400).send({ "message": "Không tồn tại thành viên." });
+                                        console.log(err);
                                         return;
                                     } else {
-                                        member.listBooking = booking._id
-                                        member.save()
-                                        .then( member =>{
+                                        m.listBooking = booking._id
+                                        m.save()
+                                        .then( mm =>{
                                             SendMailBooking.sendMailBooking(booking);
                                             res.status(200).json(booking);
                                             return;
@@ -92,15 +94,17 @@ const create = function(req, res) {
                                         })
                                     }
                                 }
-                            } )
+                            })
                         }
+                        // res.status(200).json(booking);
+                        // return;
                     }).catch( err =>{
-                        res.status(400).send({ "message": "Đặt khám không thành công." });
+                        res.status(400).send({ "message": "Đặt khám không thành công.2" });
                         console.log(err);
                         return;
                     })
                 }).catch( err =>{
-                    res.status(400).send({ "message": "Đặt khám không thành công." });
+                    res.status(400).send({ "message": "Đặt khám không thành công.3" });
                     console.log(err);
                     return;
                 })
