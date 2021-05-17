@@ -110,8 +110,22 @@ const create = function(req, res) {
                                 }
                             })
                         }
-                        // res.status(200).json(booking);
-                        // return;
+                        Booking.findById(booking._id , function (err, book) {
+                            if (err) {
+                                res.status(400).send({ "message": "loi ne" });
+                                console.log(err);
+                                return;
+                            } else {
+                                if (!book) {
+                                    res.status(400).send({ "message": "khong tim ra" });
+                                    console.log(err);
+                                    return;
+                                } else {
+                                    res.status(200).json(book);
+                                    return;
+                                }
+                            }
+                        }).populate('idOrder');
                     }).catch( err =>{
                         res.status(400).send({ "message": "Đặt khám không thành công.2" });
                         console.log(err);
