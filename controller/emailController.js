@@ -42,7 +42,7 @@ const sendMailBooking = (book)=>{
         from: 'thienhoach14141@gmail.com', // Sender address
         to: book.mail,         // List of recipients
         subject: 'Đặt khám thành công', // Subject line
-        text: 'Bạn đã đặt lịch khám thành công <br> vào lúc: ' + book.time + ' ngày: '+ book.day// Plain text body
+        text: 'Bạn đã đặt lịch khám thành công vào lúc: ' + book.time + ' ngày: '+ book.day// Plain text body
     };
     return transport.sendMail(message, function(err, info) {
         if (err) {
