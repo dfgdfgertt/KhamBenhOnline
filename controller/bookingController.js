@@ -3,6 +3,7 @@ const Faculty = require('./../database/table/faculty');
 const Booking = require('./../database/table/booking');
 const Order = require('./../database/table/order');
 const Member = require('./../database/table/member');
+const SendMailBooking = require('./emailController');
 
 const create = function(req, res) {
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
@@ -80,6 +81,7 @@ const create = function(req, res) {
                                         member.listBooking = booking._id
                                         member.save()
                                         .then( member =>{
+                                            SendMailBooking.sendMailBooking(booking);
                                             res.status(200).json(booking);
                                             return;
                                         })
