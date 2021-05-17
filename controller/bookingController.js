@@ -84,7 +84,7 @@ const create = function(req, res) {
                                         console.log(err);
                                         return;
                                     } else {
-                                        m.listBooking = booking._id
+                                        m.listBooking.push(booking._id)
                                         m.save()
                                         .then( mm =>{
                                             SendMailBooking.sendMailBooking(booking);
@@ -156,7 +156,6 @@ const getAll = function (req, res){
             res.status(200).json(bookings);
         }
     })
-    .populate('idDiagnostic')
     .populate('idFaculty')
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
@@ -180,7 +179,6 @@ const getOneById = function (req, res){
             }
         }
     })
-    .populate('idDiagnostic')
     .populate('idFaculty')
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
