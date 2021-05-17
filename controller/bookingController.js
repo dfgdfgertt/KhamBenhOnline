@@ -69,7 +69,7 @@ const create = function(req, res) {
                     booking.save().then(booking => {
                         //res.status(200).json({ "message": "Đặt khám thành công." });
                         if (idMember){
-                            Member.findByIdAndUpdate(idMember, (err, member)=>{
+                            Member.findOne(idMember, (err, member)=>{
                                 if (err) {
                                     res.status(400).send({ "message": "Sai định dạng của Id-Member." });
                                     return;
