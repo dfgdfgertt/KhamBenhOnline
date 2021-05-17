@@ -51,100 +51,57 @@ const create = function(req, res) {
                             console.log(err)
                             return;
                         } 
-                    }
-                })
-            }
-        }
-    })
-    Faculty.findById(req.body.idFaculty, function (err, faculty) {
-        if (err) {
-            res.status(400).send({ "message": "Sai định dạng của Id-Khoa." });
-            return;
-        } else {
-            if (!faculty) {
-                res.status(400).send({ "message": "Khoa không tồn tại." });
-            return;
-            } else {
-                order.idBooking = booking._id;
-                order.price = faculty.price;
-                order.save()
-                .then(oder =>{
-                    booking.idOrder = oder._id
-                    booking.save().then(booking => {
-                        //res.status(200).json({ "message": "Đặt khám thành công." });
-                        if (req.body.idMember){
-                            Member.findOne({_id:req.body.idMember}, function(err, m){
+                        else{
+                            Faculty.findById(req.body.idFaculty, function (err, faculty) {
                                 if (err) {
-                                    res.status(400).send({ "message": "Sai định dạng của Id-Member." });
-                                    console.log(err);
+                                    res.status(400).send({ "message": "Sai định dạng của Id-Khoa." });
                                     return;
                                 } else {
-                                    if (!m) {
-                                        res.status(400).send({ "message": "Không tồn tại thành viên." });
-                                        console.log(err);
-                                        return;
+                                    if (!faculty) {
+                                        res.status(400).send({ "message": "Khoa không tồn tại." });
+                                    return;
                                     } else {
-                                        m.listBooking.push(booking._id)
-                                        m.save()
-                                        .then( mm =>{
-                                            SendMailBooking.sendMailBooking(booking);
-                                            Booking.findById(booking._id , function (err, book) {
-                                                if (err) {
-                                                    res.status(400).send({ "message": "loi ne" });
-                                                    console.log(err);
-                                                    return;
-                                                } else {
-                                                    if (!book) {
-                                                        res.status(400).send({ "message": "khong tim ra" });
+                                        order.idBooking = booking._id;
+                                        order.price = faculty.price;
+                                        order.save()
+                                        .then(oder =>{
+                                            booking.idOrder = oder._id
+                                            booking.save().then(booking => {
+                                                Booking.findById(booking._id , function (err, book) {
+                                                    if (err) {
+                                                        res.status(400).send({ "message": "loi ne" });
                                                         console.log(err);
                                                         return;
                                                     } else {
-                                                        res.status(200).json(book);
-                                                        return;
+                                                        if (!book) {
+                                                            res.status(400).send({ "message": "khong tim ra" });
+                                                            console.log(err);
+                                                            return;
+                                                        } else {
+                                                            res.status(200).json(book);
+                                                            return;
+                                                        }
                                                     }
-                                                }
-                                            }).populate('idOrder');
-                                        })
-                                        .catch( err =>{
-                                            res.status(400).send({ "message": "Đặt khám không thành công." });
+                                                    }).populate('idOrder');
+                                            }).catch( err =>{
+                                                res.status(400).send({ "message": "Đặt khám không thành công.2" });
+                                                console.log(err);
+                                                return;
+                                            })
+                                        }).catch( err =>{
+                                            res.status(400).send({ "message": "Đặt khám không thành công.3" });
                                             console.log(err);
                                             return;
                                         })
                                     }
                                 }
                             })
-                        }else{
-                            Booking.findById(booking._id , function (err, book) {
-                                if (err) {
-                                    res.status(400).send({ "message": "loi ne" });
-                                    console.log(err);
-                                    return;
-                                } else {
-                                    if (!book) {
-                                        res.status(400).send({ "message": "khong tim ra" });
-                                        console.log(err);
-                                        return;
-                                    } else {
-                                        res.status(200).json(book);
-                                        return;
-                                    }
-                                }
-                            }).populate('idOrder');
                         }
-                    }).catch( err =>{
-                        res.status(400).send({ "message": "Đặt khám không thành công.2" });
-                        console.log(err);
-                        return;
-                    })
-                }).catch( err =>{
-                    res.status(400).send({ "message": "Đặt khám không thành công.3" });
-                    console.log(err);
-                    return;
+                    }
                 })
             }
         }
     })
-    
 }
 
 const getAll = function (req, res){

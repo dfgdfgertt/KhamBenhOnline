@@ -8,11 +8,6 @@ var MemberSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'diagnostic',
         default: null
-    }],
-    listBooking:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'booking',
-        default: null
     }]
 },{
     collection: 'member'
