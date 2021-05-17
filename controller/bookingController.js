@@ -2,6 +2,7 @@ const express = require('express');
 const Faculty = require('./../database/table/faculty');
 const Booking = require('./../database/table/booking');
 const Order = require('./../database/table/order');
+const Member = require('./../database/table/member');
 
 const create = function(req, res) {
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
@@ -66,8 +67,31 @@ const create = function(req, res) {
                     booking.idOrder = oder._id
                     booking.save().then(booking => {
                         //res.status(200).json({ "message": "Đặt khám thành công." });
-                        res.status(200).json(booking);
-                        return;
+                        if (!idMember){
+                            Member.findByIdAndUpdate(idMember, (err, member)=>{
+                                if (err) {
+                                    res.status(400).send({ "message": "Sai định dạng của Id-Member." });
+                                    return;
+                                } else {
+                                    if (!member) {
+                                        res.status(400).send({ "message": "Không tồn tại thành viên." });
+                                        return;
+                                    } else {
+                                        member.listBooking = booking._id
+                                        member.save()
+                                        .then( member =>{
+                                            res.status(200).json(booking);
+                                            return;
+                                        })
+                                        .catch( err =>{
+                                            res.status(400).send({ "message": "Đặt khám không thành công." });
+                                            console.log(err);
+                                            return;
+                                        })
+                                    }
+                                }
+                            } )
+                        }
                     }).catch( err =>{
                         res.status(400).send({ "message": "Đặt khám không thành công." });
                         console.log(err);
