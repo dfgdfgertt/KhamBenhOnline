@@ -162,6 +162,21 @@ const getAll = function (req, res){
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
+const getBookingByIdMember = function (req, res) {
+    Booking.find( {idMember: req.params.id},function (err, bookings) {
+        if (err) {
+            res.status(400).send({ "message": "không thể lấy danh sách lịch đặt khám." });
+            console.log(err);
+        } else {
+            res.status(200).json(bookings);
+        }
+    })
+    .populate('idFaculty')
+    .populate('idOrder')
+    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+}
+
 const getOneById = function (req, res){
     Booking.findById(req.params.id, function (err, booking) {
         if (err) {
@@ -294,5 +309,6 @@ module.exports = {
     getOneById,
     cancel,
     updateById,
-    deleteById
+    deleteById,
+    getBookingByIdMember
 };

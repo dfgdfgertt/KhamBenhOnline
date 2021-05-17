@@ -13,6 +13,7 @@ router.route('/create').post(controller.create);
 
 // Defined get route
 router.route('/get/:id').get(controller.getOneById);
+router.route('/member/get/:id').get(controller.getBookingByIdMember);
 
 //  Defined update route
 router.route('/cancel/:id').put(controller.cancel);

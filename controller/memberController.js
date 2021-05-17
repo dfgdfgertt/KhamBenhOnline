@@ -156,7 +156,7 @@ const getOneById = function(req, res) {
             res.status(200).json(member);
         }
     }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
-    .populate('listBooking');
+    .populate({ path: 'listBooking',   populate:{ path:'idFaculty' },   populate:{ path:'idOrder' },   populate:{ path:'idDoctor' , populate:{path: 'idUser'}}});
 }
 
 const getAll = function(req, res) {
@@ -168,7 +168,7 @@ const getAll = function(req, res) {
             res.status(200).json(members);
         }
     }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
-    .populate('listBooking');
+    .populate({ path: 'listBooking',   populate:{ path:'idFaculty' },   populate:{ path:'idOrder' },   populate:{ path:'idDoctor' , populate:{path: 'idUser'}}});
 }
 
 
