@@ -167,7 +167,8 @@ const getAll = function(req, res) {
         } else {
             res.status(200).json(members);
         }
-    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
+    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
+    .populate('listBooking');
 }
 
 
