@@ -10,6 +10,10 @@ const create = function(req, res) {
         res.status(400).send({ "message": "Điều kiện còn thiếu." });
         return;
     }
+    if (!req.body.customer) {
+        res.status(400).send({ "message": "Xin vui lòng điền tên người khám." });
+        return;
+    }
     if (!req.body.day) {
         res.status(400).send({ "message": "Xin vui lòng chọn ngày đặt khám." });
         return;
