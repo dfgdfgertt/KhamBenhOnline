@@ -65,7 +65,8 @@ const create = function(req, res) {
                 .then(oder =>{
                     booking.idOrder = oder._id
                     booking.save().then(booking => {
-                        res.status(200).json({ "message": "Đặt khám thành công." });
+                        //res.status(200).json({ "message": "Đặt khám thành công." });
+                        res.status(200).json(booking);
                         return;
                     }).catch( err =>{
                         res.status(400).send({ "message": "Đặt khám không thành công." });
