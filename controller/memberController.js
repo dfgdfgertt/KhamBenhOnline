@@ -155,7 +155,8 @@ const getOneById = function(req, res) {
         } else {
             res.status(200).json(member);
         }
-    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
+    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
+    .populate('listBooking');
 }
 
 const getAll = function(req, res) {
