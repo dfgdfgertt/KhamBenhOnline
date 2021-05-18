@@ -5,7 +5,8 @@ var UserSchema = mongoose.Schema({
         default: 'No Name'
     },
     avatar:{
-        type: String
+        type: String,
+        default: "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/user.png"
     },
     address:{
         type: String

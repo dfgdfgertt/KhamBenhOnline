@@ -9,6 +9,12 @@ const create = async function(req, res) {
         return;
     }
     const user = new User(req.body);
+    if (req.body.gender == 'Nam') {
+        user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
+    }
+    if (req.body.gender == 'Nữ') {
+        user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+    }
     user.save()
         .then(async user => {
             const doctor = new Doctor(req.body);
@@ -57,6 +63,12 @@ const createByAdmin = async (req, res) => {
     tk.save()
         .then(() => {
             const user = new User(req.body);
+            if (req.body.gender == 'Nam') {
+                user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
+            }
+            if (req.body.gender == 'Nữ') {
+                user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+            }
             user.idAccount = tk._id;
             user.save()
                 .then(async user => {
