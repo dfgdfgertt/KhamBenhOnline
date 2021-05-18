@@ -38,15 +38,15 @@ const create = async function (req, res) {
                     account.idRole = role._id;
                     account.save()
                     .then(account => {
-                        let user = new User();
+                        let user = new User(req.body);
                         user.idAccount = account._id;
                         user.save()
                             .then(user =>{
-                                let member = new Member();
+                                let member = new Member(req.body);
                                 member.idUser = user._id;
                                 member.save()
                                     .then(member =>{
-                                        res.status(200).json({"_id": member._id});
+                                        res.status(200).json({"_id": member._id, "message": "Tạo thành công."});
                                     })
                                     .catch(err => {
                                         res.status(400).send({"message":"unable to save to database"});
