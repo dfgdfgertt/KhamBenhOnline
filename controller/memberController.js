@@ -13,11 +13,13 @@ const create = async function(req, res) {
         return;
     } 
     let user = new User(req.body);
-    if (req.body.gender == 'Nam') {
-        user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
-    }
-    if (req.body.gender == 'Nữ') {
-        user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+    if (!req.body.avatar) {
+        if (req.body.gender == 'Nam') {
+            user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
+        }
+        if (req.body.gender == 'Nữ') {
+            user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+        }
     }
     user.save()
         .then(user => {
@@ -65,11 +67,13 @@ const createByAdmin = async (req, res) => {
     account.save()
         .then(account=>{
             let user = new User(req.body);
-            if (req.body.gender == 'Nam') {
-                user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
-            }
-            if (req.body.gender == 'Nữ') {
-                user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+            if (!req.body.avatar) {
+                if (req.body.gender == 'Nam') {
+                    user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/man.png"
+                }
+                if (req.body.gender == 'Nữ') {
+                    user.avatar = "https://imagebucketkhambenhonl-1.s3-ap-southeast-1.amazonaws.com/woman.png"
+                }
             }
             user.idAccount = account._id;
             user.save()
