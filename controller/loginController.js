@@ -254,7 +254,7 @@ const forgotpasswordOTP = async function (req, res){
                 User.findOne({$and:[{idAccount:account._id,mail:req.body.mail}]}, async function(err, user){
                     if (err) {
                         console.log(err);
-                        res.status(400).send({"message":"sai định dạng Id-Account"});
+                        res.status(400).send({"message":"sai định dạng Id-Account hoặc mail"});
                         return;
                     } else {
                         if (!user){

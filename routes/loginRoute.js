@@ -9,7 +9,7 @@ const controller = require('./../controller/loginController');
 router.route('/log').post(controller.login);
 router.route('/gg').post(controller.loginGGAccount);
 
-router.route('/changepassword/:id').post(controller.changePassword);
+router.route('/changepassword/:id').put(controller.changePassword);
 
 router.route('/forgotpassword').post(controller.forgotpasswordOTP);
 
@@ -18,6 +18,6 @@ router.route('/forgotpassword').post(controller.forgotpasswordOTP);
 //     "newpassword" : "123456"
 // }
 // this step is change password to login
-router.route('/changepasswordforgot/:id').post(controller.changepasswordforgot);
+router.route('/changepasswordforgot/:id').put(controller.changepasswordforgot);
 
 module.exports = router;
