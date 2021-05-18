@@ -109,6 +109,7 @@ const updateByIdByAdmin = function(req, res){
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
                 user.mail = req.body.mail;
+                user.gender = req.body.gender;
                 Account.findOne({username: req.body.username}, (err , acc)=>{
                     if (err) {
                         res.status(400).send({ "message": "Data is not found" });
@@ -210,6 +211,7 @@ const updateById = function(req, res) {
                 user.address = req.body.address;
                 user.phoneNumber = req.body.phoneNumber;
                 user.mail = req.body.mail;
+                user.gender = req.body.gender;
                 user.save().then(async user => {
                         doctor.nickname = req.body.nickname;
                         doctor.trainingPlaces = req.body.trainingPlaces;
