@@ -172,6 +172,10 @@ const deleteById = function (req, res) {
             return;
         }
         else{
+            if (account.username == "admin") {
+                console.log(err);
+                return res.status(400).send({"message":"Không thể xóa Admin."});
+            }
             if (!account) {
                 res.status(400).send({"message":"Tài khoản không tồn tại."});
                 console.log(err);
