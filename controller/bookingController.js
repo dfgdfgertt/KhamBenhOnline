@@ -130,8 +130,7 @@ const getBookingByIdMember = function (req, res) {
             console.log(err);
             return
         } else {
-            console.log(bookings);
-            //res.status(200).send(bookings);
+            res.status(200).send(bookings);
             return
         }
     })
