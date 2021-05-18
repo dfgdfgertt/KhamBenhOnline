@@ -80,18 +80,19 @@ const create = function(req, res) {
                                                             console.log(err);
                                                             return;
                                                         } else {
+                                                            SendMailBooking.sendMailBooking(book);
                                                             res.status(200).json(book);
                                                             return;
                                                         }
                                                     }
                                                     }).populate('idOrder');
                                             }).catch( err =>{
-                                                res.status(400).send({ "message": "Đặt khám không thành công.2" });
+                                                res.status(400).send({ "message": "Đặt khám không thành công." });
                                                 console.log(err);
                                                 return;
                                             })
                                         }).catch( err =>{
-                                            res.status(400).send({ "message": "Đặt khám không thành công.3" });
+                                            res.status(400).send({ "message": "Đặt khám không thành công." });
                                             console.log(err);
                                             return;
                                         })
@@ -119,6 +120,7 @@ const getAll = function (req, res){
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+    .sort({day: -1, time: -1})
 }
 
 const getBookingByIdMember = function (req, res) {
@@ -126,14 +128,18 @@ const getBookingByIdMember = function (req, res) {
         if (err) {
             res.status(400).send({ "message": "không thể lấy danh sách lịch đặt khám." });
             console.log(err);
+            return
         } else {
-            res.status(200).json(bookings);
+            console.log(bookings);
+            //res.status(200).send(bookings);
+            return
         }
     })
     .populate('idFaculty')
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+    .sort({day: -1, time: -1})
 }
 
 const getBookingByIdFaculty = function (req, res) {
@@ -149,6 +155,7 @@ const getBookingByIdFaculty = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+    .sort({day: -1, time: -1})
 }
 
 const getBookingByIdDoctor = function (req, res) {
@@ -164,6 +171,7 @@ const getBookingByIdDoctor = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+    .sort({day: -1, time: -1})
 }
 
 const getOneById = function (req, res){
