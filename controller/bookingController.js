@@ -120,7 +120,7 @@ const getAll = function (req, res){
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
-    .sort({day: -1, time: -1})
+    .sort({day: -1, time: 1})
 }
 
 const getBookingByIdMember = function (req, res) {
@@ -138,7 +138,10 @@ const getBookingByIdMember = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
-    .sort({day: -1, time: -1})
+
+
+
+    .sort({day: -1, time: 1})
 }
 
 const getBookingByIdFaculty = function (req, res) {
@@ -154,7 +157,7 @@ const getBookingByIdFaculty = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
-    .sort({day: -1, time: -1})
+    .sort({day: -1, time: 1})
 }
 
 const getBookingByIdDoctor = function (req, res) {
@@ -170,7 +173,7 @@ const getBookingByIdDoctor = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
-    .sort({day: -1, time: -1})
+    .sort({day: -1, time: 1})
 }
 
 const getOneById = function (req, res){
