@@ -4,6 +4,7 @@ const Role = require('./../database/table/role');
 const User = require('./../database/table/user');
 const Member = require('./../database/table/member');
 const Doctor = require('./../database/table/doctor');
+const SendMail = require('./emailController');
 
 
 const admin = function (res){
@@ -232,35 +233,43 @@ const changePassword = function(req, res){
     });
 }
 
-const forgotpassword = async function (req, res){
+const forgotpasswordOTP = async function (req, res){
+    if (!req.body.username){
+        res.status(400).send({"message":"Hãy nhập tài khoản đăng nhập của bạn."});
+        return;
+    }
+    if (!req.body.mail){
+        res.status(400).send({"message":"Hãy nhập địa chỉ mail đăng nhập của bạn."});
+        return;
+    }
     await Account.findOne({username: req.body.username}, async function(err, account) {
         if (err) {
               console.loh(err);
         }
         else{
             if (!account){
-                res.status(400).send({"message":"The account is not registered"});
+                res.status(400).send({"message":"Không đúng tài khoản đăng nhập."});
                 return;
             }else{
-                if (!req.body.forgot){
-                    res.status(400).send({"message":"Please! input email or phoneNumber"});
-                    return;
-                }
-                await User.findOne({idAccount:account._id}, function(err, user){
+                User.findOne({$and:[{idAccount:account._id,mail:req.body.mail}]}, async function(err, user){
                     if (err) {
                         console.log(err);
-                        res.status(400).send({"message":"fail to forgot"});
+                        res.status(400).send({"message":"sai định dạng Id-Account"});
                         return;
                     } else {
                         if (!user){
-                            res.status(400).send({"message":"The user not found"});
+                            res.status(400).send({"message":"Không tồn tại người dùng"});
                             return;
                         }else{
-                            newjson= [{
-                                "messege": "data is correct, input new password",
+                            let otp = Math.floor(Math.random() * (999999 - 123456) ) + 123456;
+                            await SendMail.senMailForgotPasswork(otp, req.body.mail);
+                            newjson= {
+                                "messege": "Gửi mã OTP thành công. Vui lòng kiểm tra mail để xác thực.",
+                                "otp": otp,
                                 "idAccount": account._id
-                            }];
-                            res.status(200).send(newjson);
+                            };
+                            res.status(200).json(newjson);
+                            //res.status(200).send(newjson);
                             return;
                         }
                     }
@@ -297,7 +306,7 @@ const changepasswordforgot =  function (req, res){
 module.exports = {
     login,
     changePassword,
-    forgotpassword,
+    forgotpasswordOTP,
     changepasswordforgot,
     loginGGAccount
 };

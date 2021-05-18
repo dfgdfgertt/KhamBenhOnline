@@ -6,6 +6,7 @@ const Member = require('./../database/table/member');
 const SendMailBooking = require('./emailController');
 
 const create = function(req, res) {
+    console.log(req.body);
     if (req.body.idMember && req.body.idDiagnostic && req.body.idFaculty && req.body.idDoctor ) {
         res.status(400).send({ "message": "Điều kiện còn thiếu." });
         return;
@@ -39,13 +40,14 @@ const create = function(req, res) {
                 console.log(err)
                 return;
             } 
-            else if (bookings.length > 0) {
+            else {
                 Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty, time: req.body.time }]}, function (err, bookingss) {
                     if (err) {
                         res.status(400).send({ "message": "Sai định dạng thời gian." });
                         console.log(err)
                         return;
                     } else {
+
                         if (bookingss.length >= 3) {
                             res.status(400).send({ "message": "Thời gian này đã đầy lịch khám. Xin vui lòng đặt khám vào các giờ khác." });
                             console.log(err)

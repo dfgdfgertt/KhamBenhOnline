@@ -11,18 +11,7 @@ router.route('/gg').post(controller.loginGGAccount);
 
 router.route('/changepassword/:id').post(controller.changePassword);
 
-//forgot have 2 step:
-// Step 1: /forgotpassword  
-//req{
-//     "username" : "username",
-//     "forgot" : "email or phone number"
-// }
-// res{
-//     "message": "successfully",
-//     "idAccount": "id here"
-// }
-// this step is validate the username & email or phone number
-router.route('/forgotpassword').post(controller.forgotpassword);
+router.route('/forgotpassword').post(controller.forgotpasswordOTP);
 
 // Step 2: /changepasswordforgot/:id
 // req{

@@ -27,6 +27,7 @@
     "ml-classify-text": "^2.0.0",
     "mongoose": "^5.12.5",
     "nodemailer": "^6.6.0",
+    "otp": "^1.0.1",
     "qs": "^6.7.0",
     "read-excel-file": "^5.1.0",
     "sha256": "^0.2.0",
