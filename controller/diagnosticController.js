@@ -6,12 +6,9 @@ const Faculty = require('./../database/table/faculty');
 const Member = require('./../database/table/member');
 const {Classifier} = require('ml-classify-text');
 
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
 
 const createsymptom = async function (req, res) {
-    await Growth.exe();
+    await Growth.exe(req.body);
     res.status(200).json({"message":"Thực thi thành công."});
     return;
     // await delay(5000);
