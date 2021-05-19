@@ -7,6 +7,7 @@ const controller = require('./../controller/diagnosticController');
 
 // Defined store route
 router.route('/create').post(controller.createsymptom);
+router.route('/admin/create').post(controller.createByAdmin);
 
 // Defined get data(index or listing) route
 router.route('/get').get(controller.getAll);

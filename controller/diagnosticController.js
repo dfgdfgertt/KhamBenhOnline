@@ -40,6 +40,50 @@ const createsymptom = async function (req, res) {
     // })
 }
 
+const createByAdmin = function (req, res) {
+    if (!req.body.symptom) {
+        res.status(400).send({"message":"Hãy nhập vào các triệu chứng đặc biệt."});
+        console.log(err);
+        return
+    }
+    if (!req.body.name) {
+        res.status(400).send({"message":"Hãy nhập vào tên chuẩn đoán của các triệu chứng đặc biệt."});
+        console.log(err);
+        return
+    }
+    if (!req.body.idFaculty) {
+        res.status(400).send({"message":"Hãy chọn khoa của triệu chứng."});
+        console.log(err);
+        return
+    }
+    Diagnostic.findOne({symptom: req.body.symptom}, function(err, diag){
+        if (err) {
+            res.status(400).send({"message":"Có gì đó không đúng."});
+            console.log(err);
+            return
+        } else {
+            if (diag) {
+                res.status(400).send({"message":"Đã tồn tại danh sách triệu chứng này."});
+                console.log(err);
+                return
+            } else {
+                let diagnostic = new Diagnostic(req.body);
+                diagnostic
+                    .save()
+                    .then(diag =>{
+                        res.status(200).send({"message":"Thêm chuẩn đoán thành công."});
+                        return
+                    })
+                    .catch(err =>{
+                        res.status(400).send({"message":"Thêm chuẩn đoán không thành công."});
+                        console.log(err);
+                        return
+                    })
+            }
+        }
+    });
+}
+
 const getAll = function (req, res) {
     Diagnostic.find( function(err , diagnostics){
         if (err) {
@@ -151,5 +195,6 @@ module.exports = {
     getOneById,
     updateById,
     deleteById,
-    searchDiagnostic
+    searchDiagnostic,
+    createByAdmin
 };
