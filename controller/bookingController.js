@@ -29,7 +29,7 @@ const create = function(req, res) {
     }
     let booking = new Booking(req.body);
     let order = new Order();
-    Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty }]}, function (err, bookings) {
+    Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty ,status: true}]}, function (err, bookings) {
         if (err) {
             res.status(400).send({ "message": "Sai định dạng ngày." });
             console.log(err)
@@ -41,7 +41,7 @@ const create = function(req, res) {
                 return;
             } 
             else {
-                Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty, time: req.body.time }]}, function (err, bookingss) {
+                Booking.find({$and:[{day: req.body.day ,idFaculty: req.body.idFaculty, time: req.body.time ,status: true}]}, function (err, bookingss) {
                     if (err) {
                         res.status(400).send({ "message": "Sai định dạng thời gian." });
                         console.log(err)

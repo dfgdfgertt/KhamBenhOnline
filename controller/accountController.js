@@ -6,10 +6,19 @@ const Member = require('./../database/table/member');
 
 const create = async function (req, res) {
     if (!req.body.username){ 
-        res.status(400).send({"message":"Username is require"});
+        res.status(400).send({"message":"Không được bỏ trống tài khoản đăng nhập."});
         return;
-    }else if (!req.body.password){
-        res.status(400).send({"message":"Password is require"});
+    }
+    if (!req.body.password){
+        res.status(400).send({"message":"Không được bỏ trống mật khẩu đăng nhập."});
+        return;
+    }
+    if (!req.body.fullname){
+        res.status(400).send({"message":"Không được bỏ trống họ và tên."});
+        return;
+    }
+    if (!req.body.mail){
+        res.status(400).send({"message":"Không được bỏ trống địa chỉ mail."});
         return;
     }
     await Account.findOne({username: req.body.username}, async function(err, account) {
@@ -18,7 +27,7 @@ const create = async function (req, res) {
         }
         else{
             if (account){
-                res.status(400).send({"message":"Username already exists"});
+                res.status(400).send({"message":"Tài khoản đăng nhập đã tồn tại."});
                 return;
             }
         }
@@ -28,11 +37,11 @@ const create = async function (req, res) {
     if (!req.body.idRole) {
         Role.findOne({name: 'Thành viên'}, function (err, role) {
            if (err) {
-                res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu."});
                 return;
            } else {
                if (!role) {
-                    res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
+                    res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu."});
                     return;
                } else {
                     account.idRole = role._id;
@@ -57,17 +66,17 @@ const create = async function (req, res) {
                                         res.status(200).json({"_id": member._id, "message": "Tạo thành công."});
                                     })
                                     .catch(err => {
-                                        res.status(400).send({"message":"unable to save to database"});
+                                        res.status(400).send({"message":"Tạo không thành công.", "error":"Lỗi lưu thành viên."});
                                         console.log(err);
                                     });
                             })
                             .catch(err => {
-                                res.status(400).send({"message":"unable to save to database"});
+                                res.status(400).send({"message":"Tạo không thành công.", "error":"Lỗi lưu thông tin thành viên."});
                                 console.log(err);
                             });
                     })
                     .catch(err => {
-                        res.status(400).send({"message":"unable to save to database"});
+                        res.status(400).send({"message":"Tạo không thành công.", "error":"Lỗi lưu thông tin tài khoản."});
                         console.log(err);
                     });
                }
