@@ -281,21 +281,21 @@ const forgotpasswordOTP = async function (req, res){
 
 const changepasswordforgot =  function (req, res){
     if (!req.body.newpassword){
-        res.status(400).send("Please! input new password");
+        res.status(400).send("Xin vui lòng nhập mật khẩu mới.");
         return;
     }
     Account.findById(req.params.id,function (err, account){ 
        if (err) {
-        res.status(400).send("fail to forgot password");
+        res.status(400).send("Sai định dạng Id tài khoản.");
         return;
        } else {
            account.password = req.body.newpassword;
            account.save().then(acc =>{
-                res.status(200).send("Forgot is successfullt");
+                res.status(200).send("Đặt mật khẩu mới thành công.");
                 return;
            }).catch(err =>{
                console.log(err);
-            res.status(400).send("fail to forgot password");
+            res.status(400).send("Không thể đặt lại mật khẩu.");
             return;
            })
        }
