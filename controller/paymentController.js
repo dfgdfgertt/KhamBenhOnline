@@ -10,8 +10,6 @@ const SendMailPayment = require('./emailController');
 
 const create_payment_url = async  function (req, res, next){
     var orderId = dateFormat(date, 'HHmmss');
-    var amount;
-
     if (!req.body.idOrder) {
         res.status(400).send({"message": "Thiếu Id-Order."});
         return;
@@ -57,11 +55,12 @@ const create_payment_url = async  function (req, res, next){
 
     var createDate = dateFormat(date, 'yyyymmddHHmmss');
    
+    var amount ;
     var bankCode = req.body.bankCode;
     
-    var orderInfo = "Thanh toán hóa đơn đặt lịch hẹn.";
+    var orderInfo = 'Thanh toan lich kham abc';
     var orderType = req.body.orderType;
-    var locale = "vn";
+    var locale = '';
     if(locale === null || locale === ''){
         locale = 'vn';
     }
