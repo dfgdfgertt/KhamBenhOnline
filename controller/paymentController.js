@@ -10,6 +10,8 @@ const SendMailPayment = require('./emailController');
 
 const create_payment_url = async  function (req, res, next){
     var orderId = dateFormat(date, 'HHmmss');
+    var amount;
+
     if (!req.body.idOrder) {
         res.status(400).send({"message": "Thiếu Id-Order."});
         return;
@@ -31,6 +33,7 @@ const create_payment_url = async  function (req, res, next){
                     res.status(400).send({"message": "Lịch hẹn này đã bị hủy."});
                     return;
                 }
+                amount = o.price;
                 o.idPayment = orderId;
                 o.save()
                 .catch(err =>{
@@ -54,12 +57,11 @@ const create_payment_url = async  function (req, res, next){
 
     var createDate = dateFormat(date, 'yyyymmddHHmmss');
    
-    var amount = req.body.amount;
     var bankCode = req.body.bankCode;
     
-    var orderInfo = req.body.orderDescription;
+    var orderInfo = "Thanh toán hóa đơn đặt lịch hẹn.";
     var orderType = req.body.orderType;
-    var locale = req.body.language;
+    var locale = "vn";
     if(locale === null || locale === ''){
         locale = 'vn';
     }
