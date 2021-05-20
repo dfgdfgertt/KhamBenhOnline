@@ -13,7 +13,7 @@ fpgrowth.on('data', function (itemset) {
     support = itemset.support;
     items = itemset.items;
     if (items.length>3) {
-        Diagnostic.find({symptom: {$in: items}}, function(err, diag){
+        Diagnostic.find({symptom: items}, function(err, diag){
             return;
         });
         let diagnostic =  new Diagnostic();
