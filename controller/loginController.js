@@ -5,6 +5,7 @@ const User = require('./../database/table/user');
 const Member = require('./../database/table/member');
 const Doctor = require('./../database/table/doctor');
 const SendMail = require('./emailController');
+const member = require('./../database/table/member');
 
 
 const admin = function (res){
@@ -211,26 +212,51 @@ const changePassword = function(req, res){
         res.status(400).send({"message":"Please! input new password"});
         return;
     }
-    Account.findOne({_id: req.params.id},  async function(err, account){
+    Member.findById(req.params.id, function (err, member) {
         if (err) {
-            res.status(400).send({"message":"Account not found"});
+            res.status(400).send({"message":"Lỗi id người dùng."});
             console.log(err);
             return;
-        } else {
-            if (account.password != req.body.password) {
-                res.status(400).send({"message":"Password incorrect"});
+        }else{
+            if (!member) {
+                res.status(400).send({"message":"Người dùng không tồn tại."});
+                console.log(err);
+                return;
             } else {
-                account.password = req.body.newpassword;
-                account.save().then(acc =>{
-                    res.status(400).send({"message":"Change password is successfully"});
-                    return;
-                }).catch(err => {
-                    res.status(400).send({"message":"unable to Change password"});
+                member.idUser.idAccount.password = req.body.newpassword
+                member.idUser.idAccount.save()
+                .catch(err => {
+                    res.status(400).send({"message":"Có lỗi trong việc thay đổi mật khẩu."});
                     console.log(err);
-                });
+                    return;
+                })
+                .then(acc =>{
+                    res.status(200).send({"message":"Thay đổi mật khẩu thành công."});
+                    return;
+                })
             }
         }
-    });
+    }).populate({ path: 'idUser',  populate:{ path:'idAccount'}});
+    // Account.findOne({_id: req.params.id},  async function(err, account){
+    //     if (err) {
+    //         res.status(400).send({"message":"Account not found"});
+    //         console.log(err);
+    //         return;
+    //     } else {
+    //         if (account.password != req.body.password) {
+    //             res.status(400).send({"message":"Password incorrect"});
+    //         } else {
+    //             account.password = req.body.newpassword;
+    //             account.save().then(acc =>{
+    //                 res.status(400).send({"message":"Change password is successfully"});
+    //                 return;
+    //             }).catch(err => {
+    //                 res.status(400).send({"message":"unable to Change password"});
+    //                 console.log(err);
+    //             });
+    //         }
+    //     }
+    // });
 }
 
 const forgotpasswordOTP = async function (req, res){
