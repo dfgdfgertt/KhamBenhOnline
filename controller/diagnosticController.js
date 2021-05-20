@@ -8,6 +8,7 @@ const {Classifier} = require('ml-classify-text');
 
 
 const createsymptom = async function (req, res) {
+    //console.log(req.body);
     await Growth.exe(req.body);
     res.status(200).json({"message":"Thực thi thành công."});
     return;

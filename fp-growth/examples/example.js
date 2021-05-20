@@ -1,6 +1,9 @@
 var fpgrowth = require("../dist/fpgrowth");
 const Diagnostic = require('./../../database/table/diagnostic');
 
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
 
 // Execute FPGrowth with a minimum support of 40%.
 var fpgrowth = new fpgrowth.FPGrowth(0.1);
@@ -13,21 +16,19 @@ fpgrowth.on('data', async function (itemset) {
     support = itemset.support;
     items = itemset.items;
     if (items.length>3) {
-        await Diagnostic.findOne({symptom: {$in: items}}, function(err, diag){
+        Diagnostic.findOne({symptom: {$in: items}}, function(err, diag){
            if (diag) {
                 //console.log(diag);
-               return
-           } else {
-                let diagnostic =  new Diagnostic();
-                diagnostic.symptom = items;
-                diagnostic.save().then( e =>{
-                    //console.log(diagnostic);
-                }).catch(err =>{
-                    console.log(err);
-                });
-           }
+               return;
+           } 
         });
-        
+        let diagnostic =  new Diagnostic();
+        diagnostic.symptom = items;
+        diagnostic.save().then( e =>{
+            //console.log(diagnostic);
+        }).catch(err =>{
+            console.log(err);
+        });
         // console.log(`Itemset { ${items.join(',')} } is frequent and have a support of ${support}`);
         // count++;
         // console.log(count);
@@ -46,6 +47,7 @@ async function execute(array) {
 
 async function exe(array) {
     console.log(`Executing FPGrowth...`);
+    delay(5000);
     await execute(array);
 };
 
