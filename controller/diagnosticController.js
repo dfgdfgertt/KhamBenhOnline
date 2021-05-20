@@ -174,12 +174,6 @@ const searchDiagnostic = function (req, res) {
                                 u.save();
                             })
                         }
-                        Member.findById(req.body.idMember, function (err, member) {
-                            if (member) {
-                                member.listDiagnostic.push(diagnostic);
-                                member.save()
-                            }
-                        })
                         res.status(200).json(diagnostic);
                         return;
                     }
