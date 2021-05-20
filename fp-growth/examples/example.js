@@ -9,19 +9,23 @@ var support, items;
 //var count = 0;
 
 // Returns itemsets 'as soon as possible' through events.
-fpgrowth.on('data', function (itemset) {
+fpgrowth.on('data', async function (itemset) {
     support = itemset.support;
     items = itemset.items;
     if (items.length>3) {
-        Diagnostic.find({symptom: items}, function(err, diag){
-            return;
-        });
-        let diagnostic =  new Diagnostic();
-        diagnostic.symptom = items;
-        diagnostic.save().then( e =>{
-            //console.log(diagnostic);
-        }).catch(err =>{
-            console.log(err);
+        await Diagnostic.findOne({symptom: {$in: items}}, function(err, diag){
+           if (diag) {
+                //console.log(diag);
+               return
+           } else {
+                let diagnostic =  new Diagnostic();
+                diagnostic.symptom = items;
+                diagnostic.save().then( e =>{
+                    //console.log(diagnostic);
+                }).catch(err =>{
+                    console.log(err);
+                });
+           }
         });
         
         // console.log(`Itemset { ${items.join(',')} } is frequent and have a support of ${support}`);
