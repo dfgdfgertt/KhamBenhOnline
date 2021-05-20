@@ -153,8 +153,7 @@ const deleteById = function (req, res) {
 }
 
 const searchDiagnostic = function (req, res) {
-    // console.log(req.body.symptom.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D'));
-    // return
+ 
     const classifier = new Classifier();
     Diagnostic.find(function(err , diagnostics){
         diagnostics.forEach(diagnostic => {
@@ -175,6 +174,12 @@ const searchDiagnostic = function (req, res) {
                                 u.save();
                             })
                         }
+                        Member.findById(req.body.idMember, function (err, member) {
+                            if (member) {
+                                member.listDiagnostic.push(diagnostic);
+                                member.save()
+                            }
+                        })
                         res.status(200).json(diagnostic);
                         return;
                     }
