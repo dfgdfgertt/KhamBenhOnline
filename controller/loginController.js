@@ -223,17 +223,28 @@ const changePassword = function(req, res){
                 console.log(err);
                 return;
             } else {
-                member.idUser.idAccount.password = req.body.newpassword
-                member.idUser.idAccount.save()
-                .catch(err => {
-                    res.status(400).send({"message":"Có lỗi trong việc thay đổi mật khẩu."});
-                    console.log(err);
+                if (member.idUser.idAccount.password == req.body.password) {
+                    if (member.idUser.idAccount.password == req.body.newpassword) {
+                        res.status(400).send({"message":"Mật khẩu mới không thể trùng với mật khẩu cũ."});
+                        console.log(err);
+                        return;
+                    } else {
+                        member.idUser.idAccount.password = req.body.newpassword
+                        member.idUser.idAccount.save()
+                        .catch(err => {
+                            res.status(400).send({"message":"Có lỗi trong việc thay đổi mật khẩu."});
+                            console.log(err);
+                            return;
+                        })
+                        .then(acc =>{
+                            res.status(200).send({"message":"Thay đổi mật khẩu thành công."});
+                            return;
+                        })
+                    }
+                }else{
+                    res.status(400).send({"message":"Mật khẩu cũ không đúng."});
                     return;
-                })
-                .then(acc =>{
-                    res.status(200).send({"message":"Thay đổi mật khẩu thành công."});
-                    return;
-                })
+                }
             }
         }
     }).populate({ path: 'idUser',  populate:{ path:'idAccount'}});
