@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('./../controller/rolecontroller');
+const controller = require('./../controller/roleController');
 
 //link: http://113.173.154.51:9000/api/role/
 //link: http://localhost:9000/api/role/
