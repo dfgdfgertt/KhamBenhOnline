@@ -4,11 +4,7 @@ var MemberSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    listDiagnostic:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'diagnostic',
-        default: null
-    }]
+    listDiagnostic:[]
 },{
     collection: 'member'
 });

@@ -171,7 +171,7 @@ const searchDiagnostic = function (req, res) {
                     } else {
                         if (req.body.idMember) {
                             Member.findById(req.body.idMember, (err, u)=>{
-                                u.listDiagnostic.push(diagnostic._id);
+                                u.listDiagnostic.push(diagnostic);
                                 u.save();
                             })
                         }
