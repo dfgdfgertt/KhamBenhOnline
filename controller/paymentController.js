@@ -132,14 +132,14 @@ const vnpay_ipn =  function (req, res, next){
             })
             //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
             //res.status(200).json({RspCode: '00', Message: 'success'})
-            res.redirect('lchealth.surge.sh/home-thanhcongne')
+            res.redirect('http://lchealth.surge.sh/home-thanhcongne')
         }else{
-            res.redirect('lchealth.surge.sh/home-thatbaine')
+            res.redirect('http://lchealth.surge.sh/home-thatbaine')
         }
     }
     else {
         //res.status(400).json({RspCode: '97', Message: 'Fail checksum'})
-        res.redirect('lchealth.surge.sh/home-thatbaine')
+        res.redirect('http://lchealth.surge.sh/home-thatbaine')
     }
 }
 
