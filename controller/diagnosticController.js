@@ -175,8 +175,12 @@ const searchDiagnostic = function (req, res) {
                                 u.save();
                             })
                         }
-                        res.status(200).json(diagnostic);
-                        return;
+                        if (diagnostic.name == 'Chưa chuẩn đoán') {
+                            return res.status(200).json({"message":"Hãy nhập rõ hơn triệu chứng của bạn!"});
+                        }else{
+                            res.status(200).json(diagnostic);
+                            return;
+                        }
                     }
                 }).populate('idFaculty');
             })
