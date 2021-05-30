@@ -20,7 +20,7 @@ const sendMailPayment = (book)=>{
         from: 'thienhoach14141@gmail.com', // Sender address
         to: book.mail,         // List of recipients
         subject: '[LC Health] Thanh toán thành công', // Subject line
-        text: 'Bạn đã thanh toán đặt lịch khám thành công với số tiền: ' + book.idOrder.price // Plain text body
+        html: 'Bạn đã thanh toán đặt lịch khám thành công với số tiền: ' + book.idOrder.price+'<br>Xem thông tin lịch khám ở <a href="lchealth.surge.sh/history-book-details/'+book._id+'">đây</a> ' // Plain text body
     };
     return transport.sendMail(message, function(err, info) {
         if (err) {
@@ -37,7 +37,8 @@ const sendMailBooking = (book)=>{
         from: 'thienhoach14141@gmail.com', // Sender address
         to: book.mail,         // List of recipients
         subject: '[LC Health] Đặt khám thành công', // Subject line
-        text: 'Bạn đã đặt lịch khám thành công vào lúc: ' + book.time + ' ngày: '+ book.day// Plain text body
+        html: 'Bạn đã đặt lịch khám tại LC health thành công vào lúc: ' + book.time + ' ngày: '+ book.day+'<br>Xem thông tin lịch khám ở <a href="lchealth.surge.sh/history-book-details/'+book._id+'">đây</a> '
+     
     };
     return transport.sendMail(message, function(err, info) {
         if (err) {
