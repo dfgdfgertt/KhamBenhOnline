@@ -289,7 +289,14 @@ const deleteById = function (req, res) {
                             console.log(err);
                             return;
                         } else {
-                            order.remove();
+                            if (order.status) {
+                                return res.status(400).send({ "message": "Không thể xóa khi lịch hẹn đã được thanh toán." });
+                            }
+                            else if (!booking.status) {
+                                return res.status(400).send({ "message": "Không thể xóa khi lịch hẹn đã bị hủy." });
+                            } else {
+                                order.remove();
+                            }
                         }
                     }
                 })
