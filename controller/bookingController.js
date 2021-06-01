@@ -64,6 +64,9 @@ const create = function(req, res) {
                                     return;
                                     } else {
                                         order.idBooking = booking._id;
+                                        if ((order.price == 0)||(order.price =='') ){
+                                            order.status = true;
+                                        }
                                         order.price = faculty.price;
                                         order.save()
                                         .then(oder =>{
