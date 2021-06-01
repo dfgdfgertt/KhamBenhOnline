@@ -130,7 +130,7 @@ const deleteById = function (req, res) {
                                                     console.log(err);
                                                     return;
                                                 } else{
-                                                    //faculty.remove();
+                                                    faculty.remove();
                                                     res.status(200).json({"message":"Xóa thành công"});
                                                     return;
                                                 }
