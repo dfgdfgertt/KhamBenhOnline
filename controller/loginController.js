@@ -147,8 +147,8 @@ const loginGGAccount = function (req, res) {
                                 res.status(400).send({"message":"Không có chức vụ thành viên trong cơ sỡ dự liệu"});
                                 return;
                            } else {
-                                acc.username = req.body.googleId;
-                                acc.password = req.body.googleId;
+                                acc.username = req.body.mail;
+                                acc.password = req.body.googleId+req.body.mail;
                                 acc.idRole = role._id;
                                 acc.save()
                                 .then(acc => {

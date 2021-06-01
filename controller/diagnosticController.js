@@ -119,7 +119,7 @@ const updateById = function (req, res) {
         else {
             Faculty.findById(req.body.idFaculty,async (err, faculty)=>{
                 if (err) {
-                    res.status(400).send({"message":"faculty is not found"});
+                    res.status(400).send({"message":"Vui lòng chọn khoa."});
                     console.log(err);
                     return;
                 } else {
@@ -129,7 +129,7 @@ const updateById = function (req, res) {
                     diagnostic.save()
                     .then(business => {
                         console.log(business);
-                        res.status(200).json({"message":"Update complete"});
+                        res.status(200).json({"message":"Sửa thành công."});
                         return;
                     }).catch(err => {
                         res.status(400).send({"message":"unable to update the database"});
