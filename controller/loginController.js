@@ -127,7 +127,7 @@ const loginGGAccount = function (req, res) {
         console.log(err);
         return;
     }
-    Account.findOne({username: req.body.googleId}, function (err, account) {
+    Account.findOne({username: req.body.mail}, function (err, account) {
         if (err) {
             res.status(400).send({"message":"Có lỗi trong lúc đăng nhập"});
             console.log(err);
