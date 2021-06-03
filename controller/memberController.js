@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('./../database/table/user');
 const Member = require('./../database/table/member');
 const Account = require('./../database/table/account');
+const { name } = require('ejs');
 
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -183,7 +184,8 @@ const getAll = function(req, res) {
         } else {
             res.status(200).json(members);
         }
-    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
+    }).populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
+    .sort({idUser:1});
 }
 
 

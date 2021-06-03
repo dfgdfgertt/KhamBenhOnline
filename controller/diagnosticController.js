@@ -93,7 +93,8 @@ const getAll = function (req, res) {
         } else {
             res.status(200).json(diagnostics);
         }
-    }).populate('idFaculty');
+    }).populate('idFaculty')
+    .sort({idFaculty:1, name:1});
 }
 
 const getOneById = function (req, res) {
@@ -154,11 +155,13 @@ const deleteById = function (req, res) {
 }
 
 const searchDiagnostic = function (req, res) {
- 
     const classifier = new Classifier();
     Diagnostic.find(function(err , diagnostics){
         diagnostics.forEach(diagnostic => {
-            classifier.train(diagnostic.symptom, diagnostic._id.toString());
+            if (diagnostic.name != 'Chưa chuẩn đoán') {
+                console.log(diagnostic.name)
+                classifier.train(diagnostic.symptom, diagnostic._id.toString());
+            }
         });
         let predictions = classifier.predict(req.body.symptom);
         if (predictions.length) {
@@ -171,8 +174,10 @@ const searchDiagnostic = function (req, res) {
                     } else {
                         if (req.body.idMember) {
                             Member.findById(req.body.idMember, (err, u)=>{
-                                u.listDiagnostic.push(diagnostic);
-                                u.save();
+                                if (u) {
+                                    u.listDiagnostic.push(diagnostic);
+                                    u.save();
+                                }
                             })
                         }
                         if (diagnostic.name == 'Chưa chuẩn đoán') {

@@ -127,7 +127,8 @@ const getAll = function (req, res) {
         else {
             res.status(200).json(accounts);
         }
-    }).populate('idRole');
+    }).populate('idRole')
+    .sort({idRole:-1});
 }
 
 const getOneById = function (req, res) {

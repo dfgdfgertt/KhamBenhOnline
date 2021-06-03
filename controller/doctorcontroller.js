@@ -182,7 +182,9 @@ const getAll = function(req, res) {
         } else {
             res.status(200).json(doctors);
         }
-    }).populate('idFaculty').populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}});
+    }).populate('idFaculty')
+    .populate({ path: 'idUser',  populate:{ path:'idAccount' , populate: { path: 'idRole'}}})
+    .sort({idFaculty:1,degree:1,nickname:1});
 }
 
 const getByFaculty = function(req, res) {

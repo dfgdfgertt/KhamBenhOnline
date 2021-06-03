@@ -141,9 +141,6 @@ const getBookingByIdMember = function (req, res) {
     .populate('idOrder')
     .populate({ path: 'idMember',   populate:{ path:'idUser' }})
     .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
-
-
-
     .sort({day: -1, time: 1})
 }
 
