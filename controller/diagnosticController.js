@@ -47,6 +47,11 @@ const createByAdmin = function (req, res) {
         console.log(err);
         return
     }
+    if (req.body.symptom.length < 4) {
+        res.status(400).send({"message":"Nhập tối thiểu 4 triệu chứng"});
+            console.log(err);
+            return;
+    }
     if (!req.body.name) {
         res.status(400).send({"message":"Hãy nhập vào tên chuẩn đoán của các triệu chứng đặc biệt."});
         console.log(err);
@@ -111,6 +116,11 @@ const getOneById = function (req, res) {
 }
 
 const updateById = function (req, res) {
+    if (req.body.symptom.length < 4) {
+        res.status(400).send({"message":"Nhập tối thiểu 4 triệu chứng"});
+            console.log(err);
+            return;
+    }
     Diagnostic.findById(req.params.id, async function(err, diagnostic) {
         if (!diagnostic){
             res.status(400).send({"message":"data is not found"});
@@ -126,6 +136,7 @@ const updateById = function (req, res) {
                 } else {
                     diagnostic.idFaculty = faculty._id ;
                     diagnostic.name = req.body.name;
+                    diagnostic.symptom= req.body.symptom
                     diagnostic.description = req.body.description;
                     diagnostic.save()
                     .then(business => {
