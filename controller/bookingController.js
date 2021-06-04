@@ -292,17 +292,19 @@ const deleteById = function (req, res) {
                             if (order.status) {
                                 return res.status(400).send({ "message": "Không thể xóa khi lịch hẹn đã được thanh toán." });
                             }
-                            else if (!booking.status) {
-                                return res.status(400).send({ "message": "Không thể xóa khi lịch hẹn đã bị hủy." });
+                            else if (booking.status) {
+                                return res.status(400).send({ "message": "Không thể xóa khi lịch hẹn chưa bị hủy." });
                             } else {
-                                order.remove();
+                                order.remove().then(o =>{
+                                    booking.remove().then(b =>{
+                                        res.status(200).json({ "message": "Xóa lịch hẹn thành công." });
+                                        return;
+                                    });
+                                });
                             }
                         }
                     }
                 })
-                booking.remove();
-                res.status(200).json({ "message": "Xóa lịch hẹn thành công." });
-                return;
             }
         }
     })
