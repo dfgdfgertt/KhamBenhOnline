@@ -206,30 +206,65 @@ const cancel = function (req, res) {
             console.log(err);
         } else {
             if (!booking) {
-                res.status(400).send({ "message": "Lịch khám không tồn tại." });
+                res.status(400).send({ "message": "Lịch hẹn không tồn tại." });
                 console.log(err);
                 return;
             } else {
-                booking.status = false;
-                booking
-                    .save()
-                    .then(booking =>{
-                        res.status(200).json({ "message": "Hủy hẹn khám thành công." });
-                        return;
-                    })
-                    .catch(err =>{
-                        res.status(400).send({ "message": "Hủy hẹn khám không thành công." });
+                Order.findById(booking.idOrder, function(err, order){
+                    if (err) {
+                        res.status(400).send({ "message": "Sai định dạng Id-Order." });
                         console.log(err);
-                        return;
-                    })
+                    } else {
+                        if (!order) {
+                            res.status(400).send({ "message": "Hoá đơn không tồn tại." });
+                            console.log(err);
+                            return;
+                        } else {
+                            if (order.status) {
+                                return res.status(400).send({ "message": "Không thể hủy khi lịch hẹn đã được thanh toán." });
+                            }
+                            else if (booking.status) {
+                                return res.status(400).send({ "message": "Không thể hủy khi lịch hẹn chưa bị hủy." });
+                            } else {
+                                res.status(200).json({ "message": "Huỷ lịch hẹn thành công." });
+                                return;
+                            }
+                        }
+                    }
+                })
             }
         }
     })
-    .populate('idDiagnostic')
-    .populate('idFaculty')
-    .populate('idOrder')
-    .populate({ path: 'idMember',   populate:{ path:'idUser' }})
-    .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
+    // Booking.findById(req.params.id, function (err, booking) {
+    //     if (err) {
+    //         res.status(400).send({ "message": "Sai định dạng Id-Booking." });
+    //         console.log(err);
+    //     } else {
+    //         if (!booking) {
+    //             res.status(400).send({ "message": "Lịch khám không tồn tại." });
+    //             console.log(err);
+    //             return;
+    //         } else {
+    //             booking.status = false;
+    //             booking
+    //                 .save()
+    //                 .then(booking =>{
+    //                     res.status(200).json({ "message": "Hủy hẹn khám thành công." });
+    //                     return;
+    //                 })
+    //                 .catch(err =>{
+    //                     res.status(400).send({ "message": "Hủy hẹn khám không thành công." });
+    //                     console.log(err);
+    //                     return;
+    //                 })
+    //         }
+    //     }
+    // })
+    // .populate('idDiagnostic')
+    // .populate('idFaculty')
+    // .populate('idOrder')
+    // .populate({ path: 'idMember',   populate:{ path:'idUser' }})
+    // .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 
