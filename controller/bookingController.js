@@ -223,11 +223,21 @@ const cancel = function (req, res) {
                             if (order.status) {
                                 return res.status(400).send({ "message": "Không thể hủy khi lịch hẹn đã được thanh toán." });
                             }
-                            else if (booking.status) {
-                                return res.status(400).send({ "message": "Không thể hủy khi lịch hẹn chưa bị hủy." });
+                            else if (!booking.status) {
+                                return res.status(400).send({ "message": "Lịch hẹn đã bị hủy trước đó." });
                             } else {
-                                res.status(200).json({ "message": "Huỷ lịch hẹn thành công." });
-                                return;
+                                booking.status = false;
+                                booking
+                                    .save()
+                                    .then(booking =>{
+                                        res.status(200).json({ "message": "Hủy hẹn khám thành công." });
+                                        return;
+                                    })
+                                    .catch(err =>{
+                                        res.status(400).send({ "message": "Hủy hẹn khám không thành công." });
+                                        console.log(err);
+                                        return;
+                                    })
                             }
                         }
                     }
