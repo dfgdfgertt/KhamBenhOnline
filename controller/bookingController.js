@@ -245,36 +245,6 @@ const cancel = function (req, res) {
             }
         }
     })
-    // Booking.findById(req.params.id, function (err, booking) {
-    //     if (err) {
-    //         res.status(400).send({ "message": "Sai định dạng Id-Booking." });
-    //         console.log(err);
-    //     } else {
-    //         if (!booking) {
-    //             res.status(400).send({ "message": "Lịch khám không tồn tại." });
-    //             console.log(err);
-    //             return;
-    //         } else {
-    //             booking.status = false;
-    //             booking
-    //                 .save()
-    //                 .then(booking =>{
-    //                     res.status(200).json({ "message": "Hủy hẹn khám thành công." });
-    //                     return;
-    //                 })
-    //                 .catch(err =>{
-    //                     res.status(400).send({ "message": "Hủy hẹn khám không thành công." });
-    //                     console.log(err);
-    //                     return;
-    //                 })
-    //         }
-    //     }
-    // })
-    // .populate('idDiagnostic')
-    // .populate('idFaculty')
-    // .populate('idOrder')
-    // .populate({ path: 'idMember',   populate:{ path:'idUser' }})
-    // .populate({ path: 'idDoctor',   populate:{ path:'idUser' }})
 }
 
 

@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('./../database/table/user');
 const Member = require('./../database/table/member');
 const Account = require('./../database/table/account');
-const { name } = require('ejs');
+const Booking = require('./../database/table/booking');
 
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -221,48 +221,66 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Member.findById({ _id: req.params.id }, function(err, member) {
         if (err) {
-            res.status(400).send({ "message": "Không tìm thấy thành viên" });
+            res.status(400).send({ "message": "Sai định dạng mã thành viên." });
             console.log(err);
             return;
         } else {
             if (!member) {
-                res.status(400).send({ "message": "Không tìm thấy thành viên" });
+                res.status(400).send({ "message": "Không tìm thấy thành viên." });
                 console.log(err);
                 return;
             } else {
-                User.findById({ _id: member.idUser }, function(err, user) {
+                Booking.findOne({idMember: member._id}, function (err, booking) {
                     if (err) {
-                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
+                        res.status(400).send({ "message": "Sai định dạng mã thành viên." });
                         console.log(err);
                         return;
                     } else {
-                        if (!user) {
-                            res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
+                        if (booking) {
+                            res.status(400).send({ "message": "Không thể xóa thành viên đã có lịch hẹn." });
                             console.log(err);
                             return;
                         } else {
-                            Account.findById(user.idAccount, function (err, acc) {
+                            User.findById({ _id: member.idUser }, function(err, user) {
                                 if (err) {
-                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
                                     console.log(err);
                                     return;
                                 } else {
-                                    if (!acc) {
-                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    if (!user) {
+                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin thành viên" });
                                         console.log(err);
                                         return;
                                     } else {
-                                        acc.remove();
+                                        Account.findById(user.idAccount, function (err, acc) {
+                                            if (err) {
+                                                res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                                console.log(err);
+                                                return;
+                                            } else {
+                                                if (!acc) {
+                                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                                    console.log(err);
+                                                    return;
+                                                } else {
+                                                    acc.remove().then(a=>{
+                                                        user.remove().then(u =>{
+                                                            member.remove().then(m =>{
+                                                                res.status(200).json({ "message": "Successfully removed" });
+                                                                return;
+                                                            });
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        })
+                                       
                                     }
                                 }
-                            })
-                            user.remove();
+                            });
                         }
                     }
-                });
-                member.remove();
-                res.status(200).json({ "message": "Successfully removed" });
-                return;
+                })
             }
         }
     });

@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('./../database/table/user');
 const Doctor = require('./../database/table/doctor');
 const Account = require('./../database/table/account');
+const Booking = require('./../database/table/booking');
 
 const create = async function(req, res) {
     if (!req.body.fullname) {
@@ -244,48 +245,65 @@ const updateById = function(req, res) {
 const deleteById = function(req, res) {
     Doctor.findById({ _id: req.params.id }, function(err, doctor) {
         if (err) {
-            res.status(400).send({ "message": "Bác sĩ không tồn tại" });
+            res.status(400).send({ "message": "Sai định dạng mã bác sĩ" });
             console.log(err);
             return;
         } else {
             if (!doctor) {
-                res.status(400).send({ "message": "Bác sĩ không tồn tại" });
+                res.status(400).send({ "message": "Bác sĩ không tồn tại." });
                 console.log(err);
                 return;
             } else {
-                User.findById({ _id: doctor.idUser }, function(err, user) {
+                Booking.findOne({idDoctor: doctor._id}, function (err, booking) {
                     if (err) {
-                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin cá nhân" });
+                        res.status(400).send({ "message": "Sai định dạng mã bác sĩ." });
                         console.log(err);
                         return;
                     } else {
-                        if (!user) {
-                            res.status(400).send({ "message": "Lỗi không tìm thấy thông tin cá nhân" });
+                        if (booking) {
+                            res.status(400).send({ "message": "Không thể xóa bác sĩ đã có lịch khám." });
                             console.log(err);
                             return;
                         } else {
-                            Account.findById({ _id: user.idAccount }, function(err, account){
+                            User.findById({ _id: doctor.idUser }, function(err, user) {
                                 if (err) {
-                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    res.status(400).send({ "message": "Sai định dạng mã người dùng." });
                                     console.log(err);
                                     return;
                                 } else {
-                                    if (!account) {
-                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản" });
+                                    if (!user) {
+                                        res.status(400).send({ "message": "Lỗi không tìm thấy thông tin cá nhân." });
                                         console.log(err);
                                         return;
                                     } else {
-                                        account.remove();
+                                        Account.findById({ _id: user.idAccount }, function(err, account){
+                                            if (err) {
+                                                res.status(400).send({ "message": "Sai định dạng mã tài khoản." });
+                                                console.log(err);
+                                                return;
+                                            } else {
+                                                if (!account) {
+                                                    res.status(400).send({ "message": "Lỗi không tìm thấy thông tin tài khoản." });
+                                                    console.log(err);
+                                                    return;
+                                                } else {
+                                                    account.remove().then(a =>{
+                                                        user.remove().then(u =>{
+                                                            doctor.remove().then(d =>{
+                                                                res.status(200).json({ "message": "Xóa thành công."});
+                                                                return;
+                                                            });
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        })
                                     }
                                 }
-                            })
-                            user.remove();
+                            });
                         }
                     }
-                });
-                doctor.remove();
-                res.status(200).json({ "message": "Xóa thành công" });
-                return;
+                })
             }
         }
     });
