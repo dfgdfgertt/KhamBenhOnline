@@ -78,6 +78,7 @@ const StatisticsSalesByYear =async function (req, res) {
     var statistic = [0,0,0,0,0,0,0,0,0,0,0,0];
     let count = 0;
     let recount = 0;
+    let date = new Date()
     Faculty.find(async function (err, facultys){
         if (err) {
             res.status(400).send({"message":"Không tìm thấy dữ liệu khoa."});
@@ -94,7 +95,7 @@ const StatisticsSalesByYear =async function (req, res) {
                         recount+=books.length;
                         for (const book of books){
                             let result = book.day.split("/");
-                            if (req.params.year == result[2]) {
+                            if (req.params.year == result[2] && req.params.year <= date.getFullYear()) {
                                  Order.findOne({$and:[{idBooking: book._id},{status: true}]}, function (err, order) {
                                     if (err) {
                                         res.status(400).send({"message":"Sai định dạng trạng thái thanh toán."});
@@ -103,7 +104,13 @@ const StatisticsSalesByYear =async function (req, res) {
                                     } else {
                                         count++;
                                         if (order) {
-                                            statistic[result[1]-1]+=order.price;
+                                            if (result[2] = date.getFullYear()) {
+                                                if (result[1] <= (date.getMonth()+1)) {
+                                                    statistic[result[1]-1]+=order.price;
+                                                }
+                                            } else {
+                                                statistic[result[1]-1]+=order.price;
+                                            }
                                         } 
                                         if (count == recount) {
                                             res.status(200).json(statistic);
