@@ -2,72 +2,74 @@ const Faculty = require('./../database/table/faculty');
 const Booking = require('./../database/table/booking');
 
 const StatisticsBookingByYear = function (req, res) {
-    Faculty.find( function (err, facultys){
+    Faculty.find(async function (err, facultys){
         if (err) {
             res.status(400).send({"message":"Không tìm thấy dữ liệu khoa."});
             console.log(err);
             return;
         } else {
             var statistic = [0,0,0,0,0,0,0,0,0,0,0,0];
-            facultys.forEach(async function(element, index ) {
-                await Booking.find({idFaculty: element._id}, function(err, books) {
+            let count = 0;
+            for (const element of facultys) {
+                Booking.find({idFaculty: element._id}, function(err, books) {
                     if (err) {
                         res.status(400).send({"message":"Sai định dạng mã khoa."});
                         console.log(err);
                         return;
                     } else {
-                        books.forEach(function(element, index ) {
+                        books.forEach(async function(element, index ) {
                             let result = element.day.split("/");
                             if (req.params.year == result[2]) {
                                 statistic[result[1]-1]++;
                             }
                         });
+                        count ++;
+                        if (count  == facultys.length) {
+                            res.status(200).json(statistic);
+                            return;
+                        }
                     }
                 })
-               if (index == (facultys.length-1)) {
-                    res.status(200).json(statistic);
-                    return;
-               }
-            })
-         
+               
+            }
         }
     })
  
 }
 
+
+
 const StatisticsBookingOfFacultyByYear = function (req, res) {
-    Faculty.find( function (err, facultys){
+    Faculty.find(async function (err, facultys){
         if (err) {
             res.status(400).send({"message":"Không tìm thấy dữ liệu khoa."});
             console.log(err);
             return;
         } else {
             var results = [];
-            facultys.forEach(async function(element, index ) {
-                await Booking.find({idFaculty: element._id}, function(err, books) {
+            for (const element of facultys) {
+                Booking.find({idFaculty: element._id}, function(err, books) {
                     if (err) {
                         res.status(400).send({"message":"Sai định dạng mã khoa."});
                         console.log(err);
                         return;
                     } else {
                         let total = 0;
-                        books.forEach(function(element, index ) {
+                        books.forEach( function(element, index ) {
                             let result = element.day.split("/");
                             if (req.params.year == result[2]) {
                                 total++
                             }
                         });
-                        let faculty = facultys[index].name;
+                        let faculty = element.name;
                         results.push({faculty,total})
-
+                        if (results.length  == facultys.length) {
+                            res.status(200).json(results);
+                            return;
+                        }
                     }
                 })
-               if (index == (facultys.length-1)) {
-                    res.status(200).json(results);
-                    return;
-               }
-            })
-         
+              }
         }
     })
  
