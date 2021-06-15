@@ -6,7 +6,8 @@ const controller = require('./../controller/statisticController');
 
 
 // Defined get route
-router.route('/getStatisticsFacultyByYear/:year').get(controller.StatisticsFacultyByYear);
+router.route('/StatisticsBookingByYear/:year').get(controller.StatisticsBookingByYear);
 
+router.route('/StatisticsBookingOfFacultyByYear/:year').get(controller.StatisticsBookingOfFacultyByYear);
 
 module.exports = router;
