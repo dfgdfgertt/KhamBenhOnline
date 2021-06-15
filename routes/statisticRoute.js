@@ -10,4 +10,6 @@ router.route('/StatisticsBookingByYear/:year').get(controller.StatisticsBookingB
 
 router.route('/StatisticsBookingOfFacultyByYear/:year').get(controller.StatisticsBookingOfFacultyByYear);
 
+router.route('/StatisticsSalesByYear/:year').get(controller.StatisticsSalesByYear);
+
 module.exports = router;
