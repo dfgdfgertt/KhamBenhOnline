@@ -29,6 +29,7 @@
     "ml-classify-text": "^2.0.0",
     "mongoose": "^5.12.5",
     "nodemailer": "^6.6.0",
+    "nodemailer-smtp-transport": "^2.7.4",
     "qs": "^6.7.0",
     "read-excel-file": "^5.1.0",
     "sha256": "^0.2.0",
