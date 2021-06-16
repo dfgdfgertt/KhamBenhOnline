@@ -7,6 +7,7 @@ const HttpPORT = 9000;
 const HttpsPORT = 9001;
 const cors = require('cors');
 const fs = require("fs");
+const http = require('http');
 const https = require("https");
 
 var key = fs.readFileSync(__dirname + '/config/certsFiles/selfsigned.key');
@@ -18,7 +19,7 @@ var credentials = {
 };
 
 var httpsServer = https.createServer(credentials, app);
-
+var httpServer = http.createServer(app);
 
 const FacultyRoute = require('./routes/facultyRoute');
 const RoleRoute = require('./routes/roleRoute');
@@ -55,13 +56,13 @@ app.use('/api/payment', Payment);
 app.use('/api/statistic', Statistic);
 
 
-httpsServer.listen(HttpsPORT, () => {
+httpsServer.listen(HttpsPORT, function() {
     console.log("Https server listing on port:",HttpsPORT)
   });
 
-app.listen(HttpPORT, function() {
-    console.log('Http server listing on port:',HttpPORT);
-});
+httpServer.listen(HttpPORT, () => {
+    console.log("Http server listing on port : " + HttpPORT)
+  });;
  
 app.get("/", function(request, response)  {
     response.render("home");
