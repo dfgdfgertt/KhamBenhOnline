@@ -47,6 +47,9 @@ const create_payment_url = async  function (req, res, next){
             if (!o) {
                 return res.status(400).send({"message": "Hóa đơn không tồn tại."});
             }
+            if (o.price == '0') {
+                return res.status(400).send({"message": "Hóa đơn này miễn phí không cần thanh toán."});
+            }
             if (o.status) {
                 return res.status(400).send({"message": "Hóa đơn này đã được thanh toán."});
             }

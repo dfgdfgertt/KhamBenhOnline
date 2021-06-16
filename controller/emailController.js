@@ -2,8 +2,8 @@ var nodemailer = require('nodemailer');
 const express = require('express');
 
 let user = {
-    user: 'cuonrio1234@gmail.com',
-    pass: 'bidaica11'
+    user: 'thienhoach14141@gmail.com',
+    pass: 'bidaica1@'
 }
 
 let transport = nodemailer.createTransport({
@@ -17,7 +17,7 @@ let transport = nodemailer.createTransport({
 const sendMailPayment = (book)=>{
   
     const message = {
-        from: 'cuonrio1234@gmail.com', // Sender address
+        from: 'LC Health', // Sender address
         to: book.mail,         // List of recipients
         subject: '[LC Health] Thanh toán thành công', // Subject line
         html: 'Bạn đã thanh toán đặt lịch khám thành công với số tiền: ' + book.idOrder.price+'<br>Xem thông tin lịch khám ở <a href="lchealth.surge.sh/history-book-details/'+book._id+'">đây</a> ' // Plain text body
@@ -34,7 +34,7 @@ const sendMailPayment = (book)=>{
 
 const sendMailBooking = (book)=>{
     const message = {
-        from: 'cuonrio1234@gmail.com', // Sender address
+        from: 'LC Health', // Sender address
         to: book.mail,         // List of recipients
         subject: '[LC Health] Đặt khám thành công', // Subject line
         html: 'Bạn đã đặt lịch khám tại LC health thành công vào lúc: ' + book.time + ' ngày: '+ book.day+'<br>Xem thông tin lịch khám ở <a href="lchealth.surge.sh/history-book-details/'+book._id+'">đây</a> '
@@ -51,7 +51,7 @@ const sendMailBooking = (book)=>{
 
 const senMailForgotPasswork = (otp,mail)=>{
     const message = {
-        from: 'thienhoach14141@gmail.com', // Sender address
+        from: 'LC Health', // Sender address
         to: mail,         // List of recipients
         subject: '[LC Health] Lấy lại mật khẩu', // Subject line
         text: 'Mã đặt lại mật khẩu của bạn là: ' + otp// Plain text body
