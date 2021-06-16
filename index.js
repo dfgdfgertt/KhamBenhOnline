@@ -3,23 +3,8 @@ var express = require("express");
 var app = express();
 var Database = require('./database/connect');
 const bodyParser = require('body-parser');
-const HttpPORT = 9000;
-const HttpsPORT = 9001;
+const PORT = 9000;
 const cors = require('cors');
-const fs = require("fs");
-const http = require('http');
-const https = require("https");
-
-var key = fs.readFileSync(__dirname + '/config/certsFiles/selfsigned.key');
-var cert = fs.readFileSync(__dirname + '/config/certsFiles/selfsigned.crt');
-
-var credentials = {
-  key: key,
-  cert: cert
-};
-
-var httpsServer = https.createServer(credentials, app);
-var httpServer = http.createServer(app);
 
 const FacultyRoute = require('./routes/facultyRoute');
 const RoleRoute = require('./routes/roleRoute');
@@ -55,16 +40,11 @@ app.use('/api/booking', Booking);
 app.use('/api/payment', Payment);
 app.use('/api/statistic', Statistic);
 
-
-httpsServer.listen(HttpsPORT, function() {
-    console.log("Https server listing on port:",HttpsPORT)
-  });
-
-httpServer.listen(HttpPORT, () => {
-    console.log("Http server listing on port : " + HttpPORT)
-  });;
- 
-app.get("/", function(request, response)  {
-    response.render("home");
+app.listen(PORT, function() {
+  console.log('Starting at Port:',PORT);
 });
- 
+
+app.get("/", function(request, response)  {
+  
+  response.render("home");
+});
