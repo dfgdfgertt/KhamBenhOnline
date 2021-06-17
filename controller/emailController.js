@@ -14,8 +14,6 @@ let transport = nodemailer.createTransport(smtpTransport({
     }
 }));
 
-console.log('SMTP Configured');
-
 const sendMailPayment = (book)=>{
   
     const message = {

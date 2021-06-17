@@ -95,8 +95,9 @@ const StatisticsSalesByYear =async function (req, res) {
                         recount+=books.length;
                         for (const book of books){
                             let result = book.day.split("/");
+                            console.log(result[2])
                             if (req.params.year == result[2] && req.params.year <= date.getFullYear()) {
-                                 Order.findOne({$and:[{idBooking: book._id},{status: true}]}, function (err, order) {
+                                Order.findOne({$and:[{idBooking: book._id},{status: true}]}, function (err, order) {
                                     if (err) {
                                         res.status(400).send({"message":"Sai định dạng trạng thái thanh toán."});
                                         console.log(err);
@@ -111,13 +112,18 @@ const StatisticsSalesByYear =async function (req, res) {
                                             } else {
                                                 statistic[result[1]-1]+=order.price;
                                             }
-                                        } 
+                                        }
+                                        console.log("1: ",count)
+                                        console.log("2: ",recount)
                                         if (count == recount) {
                                             res.status(200).json(statistic);
                                             return;
                                         }
                                     }
                                 })
+                            }
+                            else{
+                                count++;
                             }
                            
                         }
